@@ -26,7 +26,7 @@
                     <p class="text-xs text-emerald-100">Simulasi & Proyeksi Bisnis Kreatif</p>
                 </div>
             </div>
-            <span class="bg-emerald-500/30 text-emerald-100 text-xs px-3 py-1.5 rounded-full border border-emerald-400/20 font-medium">v1.0 - Ready</span>
+            <span class="bg-emerald-500/30 text-emerald-100 text-xs px-3 py-1.5 rounded-full border border-emerald-400/20 font-medium">v1.1 - Updated</span>
         </div>
     </header>
 
@@ -81,6 +81,10 @@
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Gaji Karyawan / Lainnya (Rp)</label>
                         <input type="number" id="opExStaff" value="2500000" oninput="hitungSimulasi()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-emerald-500 font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-rose-600 mb-1">Biaya Lain-lain / Cadangan (Rp)</label>
+                        <input type="number" id="opExOthers" value="300000" oninput="hitungSimulasi()" class="w-full bg-rose-50/50 border border-rose-200 rounded-xl px-3 py-2 text-sm focus:outline-rose-500 font-medium text-rose-900">
                     </div>
                 </div>
             </div>
@@ -189,13 +193,14 @@
             const opExRent = parseFloat(document.getElementById('opExRent').value) || 0;
             const opExSupply = parseFloat(document.getElementById('opExSupply').value) || 0;
             const opExStaff = parseFloat(document.getElementById('opExStaff').value) || 0;
+            const opExOthers = parseFloat(document.getElementById('opExOthers').value) || 0; // Input baru
             
             const pricePerUnit = parseFloat(document.getElementById('pricePerUnit').value) || 0;
             const targetQtyDay = parseFloat(document.getElementById('targetQtyDay').value) || 0;
 
             // Perhitungan Bisnis
             const totalCapEx = capExEquip + capExPlace;
-            const totalOpEx = opExRent + opExSupply + opExStaff;
+            const totalOpEx = opExRent + opExSupply + opExStaff + opExOthers; // Ditambahkan di sini
             
             const grossRevenue = pricePerUnit * targetQtyDay * 30;
             const netProfit = grossRevenue - totalOpEx;
