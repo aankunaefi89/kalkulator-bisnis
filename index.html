@@ -10,37 +10,117 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        /* Style khusus untuk cetak PDF agar rapi dan tidak terpotong */
+        @media print {
+            body { background-color: #ffffff; color: #000000; padding: 0; }
+            .no-print { display: none !important; }
+            .print-card { border: 1px solid #e2e8f0 !important; box-shadow: none !important; break-inside: avoid; }
+            .print-sticky { position: relative !important; top: 0 !important; }
+            main { grid-cols: 1 !important; gap: 4px !important; }
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen pb-12">
 
-    <header class="bg-gradient-to-r from-orange-600 to-red-700 text-white py-6 px-4 shadow-md sticky top-0 z-50">
+    <header class="bg-gradient-to-r from-orange-600 to-red-700 text-white py-6 px-4 shadow-md sticky top-0 z-50 class-header">
         <div class="max-w-5xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <span class="text-3xl">🍳</span>
                 <div>
                     <h1 class="text-xl font-bold tracking-wide">FoodBizCalc Pro</h1>
-                    <p class="text-xs text-orange-100">Simulasi Kuliner dengan Rincian Bahan Baku Otomatis</p>
+                    <p class="text-xs text-orange-100">Simulasi Kuliner dengan Multi-Menu & Ekspor PDF</p>
                 </div>
             </div>
-            <span class="bg-orange-500/30 text-orange-100 text-xs px-3 py-1.5 rounded-full border border-orange-400/20 font-medium">v1.4 - Fixed Stable</span>
+            <div class="flex items-center gap-3 no-print">
+                <button type="button" onclick="window.print()" class="bg-white text-orange-700 hover:bg-orange-50 font-bold text-xs px-4 py-2 rounded-xl shadow-sm transition flex items-center gap-1.5">
+                    🖨️ Cetak / Simpan PDF
+                </button>
+                <span class="bg-orange-500/30 text-orange-100 text-xs px-3 py-1.5 rounded-full border border-orange-400/20 font-medium">v1.5 - MultiMenu & Print</span>
+            </div>
         </div>
     </header>
 
     <main class="max-w-5xl mx-auto px-4 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <div class="lg:col-span-2 space-y-6">
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 print-card">
                 <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
                     <span>🍜</span> Ide Bisnis Kuliner
                 </h2>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Rencana Usaha</label>
-                    <input type="text" id="bizName" value="Warung Ayam Bakar Maknyus" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-orange-500 font-medium text-slate-700">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Rencana Usaha</label>
+                        <input type="text" id="bizName" value="Warung Ayam Bakar Maknyus" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-orange-500 font-medium text-slate-700">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Hari Kerja / Bulan</label>
+                        <input type="number" id="workingDays" value="30" min="1" max="31" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-orange-500 font-bold text-slate-700">
+                    </div>
                 </div>
             </div>
 
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 print-card">
+                <h2 class="text-sm font-bold text-emerald-600 uppercase tracking-wider mb-2 flex items-center gap-2">
+                    <span>🎯</span> Target Penjualan Menu & Produk
+                </h2>
+                <p class="text-xs text-slate-400 mb-4">Input daftar menu makanan, minuman, atau camilan beserta target penjualan harian Anda:</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-100 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                                <th class="py-2 pl-1 w-2/5">Nama Menu / Produk</th>
+                                <th class="py-2 w-1/4">Harga Jual / Porsi (Rp)</th>
+                                <th class="py-2 w-1/5 text-center">Target Jual / Hari</th>
+                                <th class="py-2 w-1/4">Omset Harian</th>
+                                <th class="py-2 text-center w-10 no-print"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="menuTableBody">
+                            <tr class="border-b border-slate-50">
+                                <td class="py-2 pr-2">
+                                    <input type="text" value="Ayam Bakar Komplit" class="menu-name w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-medium focus:outline-emerald-500 text-slate-700">
+                                </td>
+                                <td class="py-2 px-1">
+                                    <input type="number" value="20000" class="menu-price w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-semibold focus:outline-emerald-500 text-slate-700">
+                                </td>
+                                <td class="py-2 px-1">
+                                    <input type="number" value="40" class="menu-qty w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-semibold text-center focus:outline-emerald-500 text-slate-700">
+                                </td>
+                                <td class="py-2 pl-2 text-xs font-bold text-slate-600">
+                                    <span class="menu-total">Rp 0</span>
+                                </td>
+                                <td class="py-2 text-center no-print">
+                                    <button type="button" onclick="hapusBarisMenu(this)" class="text-rose-400 hover:text-rose-600 text-xs font-bold px-1">✕</button>
+                                </td>
+                            </tr>
+                            <tr class="border-b border-slate-50">
+                                <td class="py-2 pr-2">
+                                    <input type="text" value="Es Teh Manis Jumbo" class="menu-name w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-medium focus:outline-emerald-500 text-slate-700">
+                                </td>
+                                <td class="py-2 px-1">
+                                    <input type="number" value="5000" class="menu-price w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-semibold focus:outline-emerald-500 text-slate-700">
+                                </td>
+                                <td class="py-2 px-1">
+                                    <input type="number" value="35" class="menu-qty w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-semibold text-center focus:outline-emerald-500 text-slate-700">
+                                </td>
+                                <td class="py-2 pl-2 text-xs font-bold text-slate-600">
+                                    <span class="menu-total">Rp 0</span>
+                                </td>
+                                <td class="py-2 text-center no-print">
+                                    <button type="button" onclick="hapusBarisMenu(this)" class="text-rose-400 hover:text-rose-600 text-xs font-bold px-1">✕</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <button type="button" onclick="tambahBarisMenu()" class="mt-3 w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold py-2 px-4 rounded-xl transition border border-dashed border-emerald-200 flex items-center justify-center gap-1 no-print">
+                    ➕ Tambah Menu / Varian Baru
+                </button>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 print-card">
                 <h2 class="text-sm font-bold text-orange-600 uppercase tracking-wider mb-2 flex items-center gap-2">
                     <span>🛒</span> Rincian Belanja Bahan Baku (HARIAN)
                 </h2>
@@ -54,13 +134,13 @@
                                 <th class="py-2 w-1/5 text-center">Jumlah (Qty)</th>
                                 <th class="py-2 w-1/4">Harga Satuan (Rp)</th>
                                 <th class="py-2 w-1/4">Total (Rp)</th>
-                                <th class="py-2 text-center w-10"></th>
+                                <th class="py-2 text-center w-10 no-print"></th>
                             </tr>
                         </thead>
                         <tbody id="ingredientTableBody">
                             <tr class="border-b border-slate-50">
                                 <td class="py-2 pr-2">
-                                    <input type="text" placeholder="Contoh: Daging Ayam (Kg)" value="Daging Ayam" class="ing-name w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-medium focus:outline-orange-500 text-slate-700">
+                                    <input type="text" value="Daging Ayam" class="ing-name w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-medium focus:outline-orange-500 text-slate-700">
                                 </td>
                                 <td class="py-2 px-1">
                                     <input type="number" value="10" class="ing-qty w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-semibold text-center focus:outline-orange-500 text-slate-700">
@@ -71,13 +151,13 @@
                                 <td class="py-2 pl-2 text-xs font-bold text-slate-600">
                                     <span class="ing-total">Rp 0</span>
                                 </td>
-                                <td class="py-2 text-center">
+                                <td class="py-2 text-center no-print">
                                     <button type="button" onclick="hapusBaris(this)" class="text-rose-400 hover:text-rose-600 text-xs font-bold px-1">✕</button>
                                 </td>
                             </tr>
                             <tr class="border-b border-slate-50">
                                 <td class="py-2 pr-2">
-                                    <input type="text" placeholder="Contoh: Beras Premium (Kg)" value="Beras Premium" class="ing-name w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-medium focus:outline-orange-500 text-slate-700">
+                                    <input type="text" value="Beras Premium" class="ing-name w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-medium focus:outline-orange-500 text-slate-700">
                                 </td>
                                 <td class="py-2 px-1">
                                     <input type="number" value="5" class="ing-qty w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-semibold text-center focus:outline-orange-500 text-slate-700">
@@ -88,7 +168,7 @@
                                 <td class="py-2 pl-2 text-xs font-bold text-slate-600">
                                     <span class="ing-total">Rp 0</span>
                                 </td>
-                                <td class="py-2 text-center">
+                                <td class="py-2 text-center no-print">
                                     <button type="button" onclick="hapusBaris(this)" class="text-rose-400 hover:text-rose-600 text-xs font-bold px-1">✕</button>
                                 </td>
                             </tr>
@@ -96,7 +176,7 @@
                     </table>
                 </div>
 
-                <button type="button" onclick="tambahBaris()" class="mt-3 w-full bg-orange-50 hover:bg-orange-100 text-orange-700 text-xs font-bold py-2 px-4 rounded-xl transition border border-dashed border-orange-200 flex items-center justify-center gap-1">
+                <button type="button" onclick="tambahBaris()" class="mt-3 w-full bg-orange-50 hover:bg-orange-100 text-orange-700 text-xs font-bold py-2 px-4 rounded-xl transition border border-dashed border-orange-200 flex items-center justify-center gap-1 no-print">
                     ➕ Tambah Komponen Bahan Baru
                 </button>
 
@@ -113,7 +193,7 @@
                 </div>
             </div>
 
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-4 print-card">
                 <div class="md:col-span-2">
                     <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
                         <span>💰</span> Modal Alat & Tempat (Awal)
@@ -129,7 +209,7 @@
                 </div>
             </div>
 
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 grid grid-cols-1 md:grid-cols-3 gap-4 print-card">
                 <div class="md:col-span-3">
                     <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
                         <span>🏢</span> Biaya Tetap (BULANAN)
@@ -148,29 +228,13 @@
                     <input type="number" id="opExOthers" value="200000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-orange-500 font-medium text-slate-700">
                 </div>
             </div>
-
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="md:col-span-2">
-                    <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                        <span>🎯</span> Harga Jual & Target Porsi
-                    </h2>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Harga Jual Per Porsi Makanan (Rp)</label>
-                    <input type="number" id="pricePerUnit" value="20000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-orange-500 font-medium text-slate-700">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Target Porsi Terjual Per Hari (Qty)</label>
-                    <input type="number" id="targetQtyDay" value="45" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-orange-500 font-medium text-slate-700">
-                </div>
-            </div>
         </div>
 
-        <div class="space-y-6 h-fit lg:sticky lg:top-24">
+        <div class="space-y-6 h-fit lg:sticky lg:top-24 print-sticky">
             
-            <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-5 rounded-2xl shadow-lg space-y-3">
+            <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-5 rounded-2xl shadow-lg space-y-3 print-card">
                 <div>
-                    <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-0.5">Estimasi Pendapatan / Omset Harian</p>
+                    <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-0.5">Total Omset / Pendapatan Harian</p>
                     <h1 class="text-xl font-bold text-amber-400" id="resDailyRevenue">Rp 0</h1>
                 </div>
                 
@@ -195,7 +259,7 @@
                 </div>
             </div>
 
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 space-y-4 print-card">
                 <div>
                     <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Keuntungan Bersih / Bulan</span>
                     <div class="flex items-baseline gap-2">
@@ -214,7 +278,7 @@
                 </div>
             </div>
 
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 print-card">
                 <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Rasio Pengeluaran vs Untung Bersih</h3>
                 <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden flex" id="barChartContainer">
                     <div id="barOpEx" class="bg-rose-500 h-full transition-all duration-300"></div>
@@ -230,18 +294,17 @@
                 </div>
             </div>
 
-            <div class="bg-amber-50 border border-amber-200/60 p-4 rounded-2xl">
+            <div class="bg-amber-50 border border-amber-200/60 p-4 rounded-2xl print-card">
                 <h4 class="text-xs font-bold text-amber-800 flex items-center gap-1.5 mb-1">
                     <span>💡</span> Analisa Struktur Food Cost:
                 </h4>
-                <p class="text-xs text-amber-900/80 leading-relaxed font-medium" id="bizAdvice">Mengisi data rincian bahan untuk mendapatkan analisa komprehensif.</p>
+                <p class="text-xs text-amber-900/80 leading-relaxed font-medium" id="bizAdvice">Mengisi data rincian untuk mendapatkan analisa komprehensif.</p>
             </div>
 
         </div>
     </main>
 
     <script>
-        // Fungsi memformat Rupiah aman (Mendukung angka negatif jika rugi)
         function formatRupiah(angka) {
             if (angka < 0) {
                 return "-Rp " + Math.round(Math.abs(angka)).toLocaleString('id-ID');
@@ -249,6 +312,38 @@
             return "Rp " + Math.round(angka).toLocaleString('id-ID');
         }
 
+        // --- MANAJEMEN TABEL MENU (Poin 3) ---
+        function tambahBarisMenu() {
+            const tbody = document.getElementById('menuTableBody');
+            const tr = document.createElement('tr');
+            tr.className = 'border-b border-slate-50';
+            tr.innerHTML = `
+                <td class="py-2 pr-2">
+                    <input type="text" placeholder="Nama menu baru..." class="menu-name w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-medium focus:outline-emerald-500 text-slate-700">
+                </td>
+                <td class="py-2 px-1">
+                    <input type="number" value="0" class="menu-price w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-semibold focus:outline-emerald-500 text-slate-700">
+                </td>
+                <td class="py-2 px-1">
+                    <input type="number" value="0" class="menu-qty w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-semibold text-center focus:outline-emerald-500 text-slate-700">
+                </td>
+                <td class="py-2 pl-2 text-xs font-bold text-slate-600">
+                    <span class="menu-total">Rp 0</span>
+                </td>
+                <td class="py-2 text-center no-print">
+                    <button type="button" onclick="hapusBarisMenu(this)" class="text-rose-400 hover:text-rose-600 text-xs font-bold px-1">✕</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+            hitungSimulasi();
+        }
+
+        function hapusBarisMenu(btn) {
+            btn.closest('tr').remove();
+            hitungSimulasi();
+        }
+
+        // --- MANAJEMEN TABEL BAHAN BAKU ---
         function tambahBaris() {
             const tbody = document.getElementById('ingredientTableBody');
             const tr = document.createElement('tr');
@@ -266,7 +361,7 @@
                 <td class="py-2 pl-2 text-xs font-bold text-slate-600">
                     <span class="ing-total">Rp 0</span>
                 </td>
-                <td class="py-2 text-center">
+                <td class="py-2 text-center no-print">
                     <button type="button" onclick="hapusBaris(this)" class="text-rose-400 hover:text-rose-600 text-xs font-bold px-1">✕</button>
                 </td>
             `;
@@ -275,60 +370,71 @@
         }
 
         function hapusBaris(btn) {
-            const tr = btn.closest('tr');
-            tr.remove();
+            btn.closest('tr').remove();
             hitungSimulasi();
         }
 
+        // --- HITUNG LOGIKA BISNIS INTI ---
         function hitungSimulasi() {
             try {
-                // 1. Hitung Baris Komponen Bahan Baku Harian
-                const rows = document.querySelectorAll('#ingredientTableBody tr');
-                let totalDailyRaw = 0;
+                // 1. Hitung Omset Multi-Menu Harian
+                const menuRows = document.querySelectorAll('#menuTableBody tr');
+                let dailyRevenue = 0;
 
-                rows.forEach(row => {
-                    const qtyEl = row.querySelector('.ing-qty');
-                    const priceEl = row.querySelector('.ing-price');
-                    
-                    if(qtyEl && priceEl) {
-                        const qty = parseFloat(qtyEl.value) || 0;
+                menuRows.forEach(row => {
+                    const priceEl = row.querySelector('.menu-price');
+                    const qtyEl = row.querySelector('.menu-qty');
+                    if (priceEl && qtyEl) {
                         const price = parseFloat(priceEl.value) || 0;
-                        const totalRow = qty * price;
-                        totalDailyRaw += totalRow;
-                        
-                        const totalRowEl = row.querySelector('.ing-total');
-                        if(totalRowEl) totalRowEl.innerText = formatRupiah(totalRow);
+                        const qty = parseFloat(qtyEl.value) || 0;
+                        const totalRowMenu = price * qty;
+                        dailyRevenue += totalRowMenu;
+
+                        const totalRowMenuEl = row.querySelector('.menu-total');
+                        if (totalRowMenuEl) totalRowMenuEl.innerText = formatRupiah(totalRowMenu);
                     }
                 });
 
-                // Tampilkan total bahan baku harian
+                // 2. Hitung Pengeluaran Bahan Baku Harian
+                const ingRows = document.querySelectorAll('#ingredientTableBody tr');
+                let totalDailyRaw = 0;
+
+                ingRows.forEach(row => {
+                    const qtyEl = row.querySelector('.ing-qty');
+                    const priceEl = row.querySelector('.ing-price');
+                    if (qtyEl && priceEl) {
+                        const qty = parseFloat(qtyEl.value) || 0;
+                        const price = parseFloat(priceEl.value) || 0;
+                        const totalRowIng = qty * price;
+                        totalDailyRaw += totalRowIng;
+
+                        const totalRowIngEl = row.querySelector('.ing-total');
+                        if (totalRowIngEl) totalRowIngEl.innerText = formatRupiah(totalRowIng);
+                    }
+                });
+
                 document.getElementById('resOpExDailyRaw').innerText = formatRupiah(totalDailyRaw);
 
-                // 2. Ambil Elemen Input Lainnya
+                // 3. Ambil Input Variabel Lainnya
+                const workingDays = parseFloat(document.getElementById('workingDays').value) || 30;
+                const opExDailyGas = parseFloat(document.getElementById('opExDailyGas').value) || 0;
                 const capExEquip = parseFloat(document.getElementById('capExEquip').value) || 0;
                 const capExPlace = parseFloat(document.getElementById('capExPlace').value) || 0;
-                const opExDailyGas = parseFloat(document.getElementById('opExDailyGas').value) || 0;
-                
                 const opExRent = parseFloat(document.getElementById('opExRent').value) || 0;
                 const opExStaff = parseFloat(document.getElementById('opExStaff').value) || 0;
                 const opExOthers = parseFloat(document.getElementById('opExOthers').value) || 0;
-                
-                const pricePerUnit = parseFloat(document.getElementById('pricePerUnit').value) || 0;
-                const targetQtyDay = parseFloat(document.getElementById('targetQtyDay').value) || 0;
 
-                // 3. Rumus Inti Logika Bisnis (Diasumsikan 30 Hari Kerja Efektif)
+                // 4. Kalkulasi Kombinasi Akurat berdasarkan Hari Kerja Efektif
                 const totalDailyOpExCombined = totalDailyRaw + opExDailyGas;
-                const totalMonthlyOpExFromDaily = totalDailyOpExCombined * 30;
+                const totalMonthlyOpExFromDaily = totalDailyOpExCombined * workingDays;
                 const totalFixedMonthlyOpEx = opExRent + opExStaff + opExOthers;
-                
+
                 const totalCapEx = capExEquip + capExPlace;
                 const totalOpExCombined = totalMonthlyOpExFromDaily + totalFixedMonthlyOpEx;
-                
-                const dailyRevenue = pricePerUnit * targetQtyDay;
-                const grossRevenue = dailyRevenue * 30;
+                const grossRevenue = dailyRevenue * workingDays;
                 const netProfit = grossRevenue - totalOpExCombined;
-                
-                // Perhitungan BEP / Balik Modal
+
+                // Perhitungan Jangka Waktu BEP
                 let monthsToBEP = "∞";
                 if (netProfit > 0) {
                     monthsToBEP = (totalCapEx / netProfit).toFixed(1) + " Bulan";
@@ -338,7 +444,7 @@
                     monthsToBEP = "Rugi";
                 }
 
-                // 4. Dorong Data Hasil Perhitungan ke Layar (DOM)
+                // 5. Dorong Output Hasil ke DOM Tampilan
                 document.getElementById('resDailyRevenue').innerText = formatRupiah(dailyRevenue);
                 document.getElementById('resTotalCapEx').innerText = formatRupiah(totalCapEx);
                 document.getElementById('resTotalOpEx').innerText = formatRupiah(totalOpExCombined);
@@ -346,7 +452,6 @@
                 document.getElementById('resNetProfit').innerText = formatRupiah(netProfit);
                 document.getElementById('resBEP').innerText = monthsToBEP;
 
-                // Mengubah warna teks profit jika minus/rugi
                 const netProfitEl = document.getElementById('resNetProfit');
                 if (netProfit < 0) {
                     netProfitEl.className = "text-xl font-extrabold text-rose-600";
@@ -354,7 +459,7 @@
                     netProfitEl.className = "text-xl font-extrabold text-teal-600";
                 }
 
-                // 5. Animasi Grafik Batang Rasio Pengeluaran
+                // 6. Update Grafik Batang Proporsional
                 const barOpEx = document.getElementById('barOpEx');
                 const barProfit = document.getElementById('barProfit');
                 const pctOpExEl = document.getElementById('pctOpEx');
@@ -364,53 +469,44 @@
                     let pctOpEx = (totalOpExCombined / grossRevenue) * 100;
                     let pctProfit = (netProfit / grossRevenue) * 100;
 
-                    if (pctProfit < 0) {
-                        pctOpEx = 100;
-                        pctProfit = 0;
-                    }
+                    if (pctProfit < 0) { pctOpEx = 100; pctProfit = 0; }
 
                     barOpEx.style.width = pctOpEx + '%';
                     barProfit.style.width = pctProfit + '%';
-                    
                     pctOpExEl.innerText = Math.round(pctOpEx) + '%';
                     pctProfitEl.innerText = Math.round(pctProfit) + '%';
                 } else {
-                    barOpEx.style.width = '0%';
-                    barProfit.style.width = '0%';
-                    pctOpExEl.innerText = '0%';
-                    pctProfitEl.innerText = '0%';
+                    barOpEx.style.width = '0%'; barProfit.style.width = '0%';
+                    pctOpExEl.innerText = '0%'; pctProfitEl.innerText = '0%';
                 }
 
-                // 6. Widget Analisa Pintar Otomatis
+                // 7. Widget Analisa Pintar Food Cost Real-time
                 const adviceEl = document.getElementById('bizAdvice');
                 const bizName = document.getElementById('bizName').value || "Usaha Kuliner Ini";
-                
+
                 if (netProfit < 0) {
-                    adviceEl.innerText = `⚠️ Rencana "${bizName}" saat ini merugi. Cobalah evaluasi harga belanja bahan baku harian Anda atau pertimbangkan menaikkan harga jual menu per porsi agar mampu mengejar margin keuntungan positif.`;
+                    adviceEl.innerText = `⚠️ Rencana "${bizName}" saat ini merugi. Cobalah evaluasi kembali belanja harian atau naikkan harga varian menu Anda agar mencapai keuntungan positif.`;
                 } else if (netProfit === 0 && grossRevenue > 0) {
-                    adviceEl.innerText = `⚖️ Posisi Break Even! Penjualan Anda murni hanya habis untuk memutar biaya belanja esok hari dan operasional bulanan tanpa profit tertinggal. Tingkatkan target porsi harian minimal 5-10 porsi lagi.`;
+                    adviceEl.innerText = `⚖️ Posisi Break Even! Hasil omset habis murni untuk menutup operasional harian dan bulanan. Targetkan tambahan kuantitas penjualan harian.`;
                 } else if (netProfit > 0) {
-                    const foodCostRatio = (totalDailyRaw / dailyRevenue) * 100;
+                    const foodCostRatio = dailyRevenue > 0 ? (totalDailyRaw / dailyRevenue) * 100 : 0;
                     if (foodCostRatio > 50) {
-                        adviceEl.innerText = `📈 Profit aman, tetapi Food Cost cukup tinggi (${Math.round(foodCostRatio)}% dari omset harian). Dalam standar bisnis kuliner, biaya bahan baku sebaiknya ditekan ke angka 35-45%. Disarankan untuk membeli bahan dalam grosir/partai besar agar mendapat harga lebih murah.`;
+                        adviceEl.innerText = `📈 Profit aman, tetapi akumulasi Food Cost Anda tinggi (${Math.round(foodCostRatio)}% dari omset). Standar kuliner idealnya berada di kisaran 35-45%. Disarankan beli bahan grosir/partai besar.`;
                     } else {
-                        adviceEl.innerText = `🔥 Sangat Bagus! Struktur Food Cost "${bizName}" tergolong sangat sehat di angka ${Math.round(foodCostRatio)}%. Rasio keuntungan bulanan Anda tebal dan estimasi balik modal alat dalam ${monthsToBEP} terhitung cepat!`;
+                        adviceEl.innerText = `🔥 Sangat Bagus! Struktur Food Cost gabungan "${bizName}" sangat sehat di angka ${Math.round(foodCostRatio)}%. Rasio keuntungan tebal dan proyeksi balik modal dalam ${monthsToBEP} terhitung cepat!`;
                     }
                 } else {
-                    adviceEl.innerText = "Sebutkan nama barang, kuantitas, dan harga satuan bahan baku harian untuk memperoleh simulasi keuntungan terperinci.";
+                    adviceEl.innerText = "Masukkan data target produk dan belanja bahan untuk memunculkan analisa komprehensif.";
                 }
             } catch (err) {
                 console.error("Error kalkulasi: ", err);
             }
         }
 
-        // Event Listener Global (Mendeteksi input di kolom manapun secara realtime tanpa inline tag)
+        // Event Listener Global Real-time
         document.addEventListener('DOMContentLoaded', function() {
-            // Jalankan kalkulasi pertama kali halaman dibuka
             hitungSimulasi();
-            
-            // Pasang pendengar ketukan pada seluruh elemen dokumen
-            document.addEventListener('input', function(e) {
+            document.addEventListener('input', function() {
                 hitungSimulasi();
             });
         });
