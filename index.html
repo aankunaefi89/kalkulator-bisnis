@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulasi & Kalkulator Bisnis Kreatif</title>
+    <title>Simulasi & Kalkulator Bisnis Kuliner</title>
     <!-- Tailwind CSS untuk Desain Modern -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- Font Bagus -->
@@ -17,16 +17,16 @@
 <body class="bg-slate-50 text-slate-800 min-h-screen pb-12">
 
     <!-- Header -->
-    <header class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white py-6 px-4 shadow-md sticky top-0 z-50">
+    <header class="bg-gradient-to-r from-orange-600 to-red-700 text-white py-6 px-4 shadow-md sticky top-0 z-50">
         <div class="max-w-4xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <span class="text-3xl">📊</span>
+                <span class="text-3xl">🍳</span>
                 <div>
-                    <h1 class="text-xl font-bold tracking-wide">BizCalc</h1>
-                    <p class="text-xs text-emerald-100">Simulasi & Proyeksi Bisnis Kreatif</p>
+                    <h1 class="text-xl font-bold tracking-wide">FoodBizCalc</h1>
+                    <p class="text-xs text-orange-100">Simulasi & Proyeksi Bisnis Kuliner / Makanan</p>
                 </div>
             </div>
-            <span class="bg-emerald-500/30 text-emerald-100 text-xs px-3 py-1.5 rounded-full border border-emerald-400/20 font-medium">v1.1 - Updated</span>
+            <span class="bg-orange-500/30 text-orange-100 text-xs px-3 py-1.5 rounded-full border border-orange-400/20 font-medium">v1.2 - Food Mode</span>
         </div>
     </header>
 
@@ -34,15 +34,15 @@
         
         <!-- KOLOM KIRI: INPUT DATA -->
         <div class="space-y-6">
-            <!-- Blok 1: Nama & Model Bisnis -->
+            <!-- Blok 1: Nama Rencana Usaha -->
             <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-100">
                 <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <span>🚀</span> Ide Bisnis
+                    <span>🍜</span> Ide Bisnis Kuliner
                 </h2>
                 <div class="space-y-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Rencana Bisnis</label>
-                        <input type="text" id="bizName" value="Steam Motor Mandiri" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-emerald-500 font-medium">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Rencana Usaha</label>
+                        <input type="text" id="bizName" value="Warung Ayam Bakar Maknyus" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-orange-500 font-medium">
                     </div>
                 </div>
             </div>
@@ -50,59 +50,74 @@
             <!-- Blok 2: Investasi / Modal Awal -->
             <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-100">
                 <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <span>💰</span> Modal / Investasi Awal
+                    <span>💰</span> Modal Alat & Booth (Awal)
                 </h2>
                 <div class="space-y-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Peralatan & Mesin (Rp)</label>
-                        <input type="number" id="capExEquip" value="8500000" oninput="hitungSimulasi()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-emerald-500 font-medium">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Peralatan Masak, Etalase, Meja & Kursi (Rp)</label>
+                        <input type="number" id="capExEquip" value="5500000" oninput="hitungSimulasi()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-orange-500 font-medium">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Renovasi / Tempat Tempat (Rp)</label>
-                        <input type="number" id="capExPlace" value="4000000" oninput="hitungSimulasi()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-emerald-500 font-medium">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Dekorasi / Renovasi Banner Tempat (Rp)</label>
+                        <input type="number" id="capExPlace" value="1500000" oninput="hitungSimulasi()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-orange-500 font-medium">
                     </div>
                 </div>
             </div>
 
-            <!-- Blok 3: Operasional Bulanan -->
+            <!-- Blok 3: Operasional HARIAN -->
             <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-100">
-                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <span>📉</span> Biaya Operasional (Bulanan)
+                <h2 class="text-sm font-bold text-orange-600 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <span>🛒</span> Biaya Operasional (HARIAN)
                 </h2>
                 <div class="space-y-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Sewa Tempat / Air & Listrik (Rp)</label>
-                        <input type="number" id="opExRent" value="1200000" oninput="hitungSimulasi()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-emerald-500 font-medium">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Belanja Bahan Baku / Sembako Per Hari (Rp)</label>
+                        <input type="number" id="opExDailyRaw" value="300000" oninput="hitungSimulasi()" class="w-full bg-orange-50/40 border border-orange-200 rounded-xl px-3 py-2 text-sm focus:outline-orange-500 font-medium">
+                        <p class="text-[10px] text-slate-400 mt-0.5">*Contoh: Daging, beras, bumbu dapur, sayuran</p>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Bahan Baku / Sabun / Perlengkapan (Rp)</label>
-                        <input type="number" id="opExSupply" value="500000" oninput="hitungSimulasi()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-emerald-500 font-medium">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Gaji Karyawan / Lainnya (Rp)</label>
-                        <input type="number" id="opExStaff" value="2500000" oninput="hitungSimulasi()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-emerald-500 font-medium">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-rose-600 mb-1">Biaya Lain-lain / Cadangan (Rp)</label>
-                        <input type="number" id="opExOthers" value="300000" oninput="hitungSimulasi()" class="w-full bg-rose-50/50 border border-rose-200 rounded-xl px-3 py-2 text-sm focus:outline-rose-500 font-medium text-rose-900">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Operasional Harian Lainnya (Rp)</label>
+                        <input type="number" id="opExDailyGas" value="30000" oninput="hitungSimulasi()" class="w-full bg-orange-50/40 border border-orange-200 rounded-xl px-3 py-2 text-sm focus:outline-orange-500 font-medium">
+                        <p class="text-[10px] text-slate-400 mt-0.5">*Contoh: Gas, es batu, kemasan/kotak mika mading, sabun cuci</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Blok 4: Target Penjualan -->
+            <!-- Blok 4: Operasional BULANAN -->
             <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-100">
                 <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <span>🎯</span> Harga Jual & Target
+                    <span>🏢</span> Biaya Tetap (BULANAN)
                 </h2>
                 <div class="space-y-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Tarif / Harga Per Transaksi (Rp)</label>
-                        <input type="number" id="pricePerUnit" value="15000" oninput="hitungSimulasi()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-emerald-500 font-medium">
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Sewa Tempat / Lapak & Listrik (Rp/Bulan)</label>
+                        <input type="number" id="opExRent" value="1000000" oninput="hitungSimulasi()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-orange-500 font-medium">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Target Penjualan Per Hari (Qty)</label>
-                        <input type="number" id="targetQtyDay" value="15" oninput="hitungSimulasi()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-emerald-500 font-medium">
-                        <p class="text-[11px] text-slate-400 mt-1">*Diasumsikan beroperasi 30 hari dalam sebulan</p>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Gaji Karyawan jika ada (Rp/Bulan)</label>
+                        <input type="number" id="opExStaff" value="2000000" oninput="hitungSimulasi()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-orange-500 font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Biaya Tak Terduga / Cadangan (Rp/Bulan)</label>
+                        <input type="number" id="opExOthers" value="200000" oninput="hitungSimulasi()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-orange-500 font-medium">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blok 5: Target Penjualan Makanan -->
+            <div class="bg-white p-5 rounded-2xl shadow-xs border border-slate-100">
+                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <span>🎯</span> Harga Jual & Target Porsi
+                </h2>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Harga Jual Per Porsi / Menu Makanan (Rp)</label>
+                        <input type="number" id="pricePerUnit" value="20000" oninput="hitungSimulasi()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-orange-500 font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Target Porsi Terjual Per Hari (Qty)</label>
+                        <input type="number" id="targetQtyDay" value="40" oninput="hitungSimulasi()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-orange-500 font-medium">
+                        <p class="text-[11px] text-slate-400 mt-1">*Estimasi berjalan aktif 30 hari kerja dalam sebulan</p>
                     </div>
                 </div>
             </div>
@@ -111,13 +126,21 @@
         <!-- KOLOM KANAN: HASIL / KESIMPULAN -->
         <div class="space-y-6 h-fit sticky top-24">
             
-            <!-- Ringkasan Hasil Utama -->
-            <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden">
-                <div class="absolute -right-6 -bottom-6 text-9xl text-slate-700/20 font-bold select-none">Rp</div>
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">Proyeksi Pendapatan Kotor / Bulan</p>
-                <h1 class="text-3xl font-extrabold text-emerald-400" id="resGrossRevenue">Rp 0</h1>
+            <!-- Estimasi Omset / Pendapatan Harian & Bulanan -->
+            <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6 rounded-2xl shadow-lg space-y-4">
+                <div>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-0.5">Estimasi Pendapatan / Omset Harian</p>
+                    <h1 class="text-2xl font-bold text-amber-400" id="resDailyRevenue">Rp 0</h1>
+                </div>
                 
-                <hr class="border-slate-700 my-4">
+                <hr class="border-slate-700/60">
+
+                <div>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-0.5">Total Pendapatan Kotor / Bulan</p>
+                    <h1 class="text-3xl font-extrabold text-emerald-400" id="resGrossRevenue">Rp 0</h1>
+                </div>
+                
+                <hr class="border-slate-700/60">
                 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -125,13 +148,13 @@
                         <p class="text-sm font-bold text-slate-200" id="resTotalCapEx">Rp 0</p>
                     </div>
                     <div>
-                        <p class="text-[11px] text-slate-400 uppercase font-medium">Total Biaya Bulanan</p>
+                        <p class="text-[11px] text-slate-400 uppercase font-medium">Total Biaya (Harian + Bulanan)</p>
                         <p class="text-sm font-bold text-slate-200" id="resTotalOpEx">Rp 0</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Profit Bersih & BEP -->
+            <!-- Profit Bersih Bulanan & BEP -->
             <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-100 space-y-4">
                 <div>
                     <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Estimasi Keuntungan Bersih / Bulan</span>
@@ -143,7 +166,7 @@
                 <div class="bg-teal-50 border border-teal-100 rounded-xl p-3 flex items-center justify-between">
                     <div>
                         <span class="text-xs font-bold text-teal-800 block">Balik Modal (Payback Period)</span>
-                        <p class="text-[11px] text-teal-600 font-medium">Estimasi investasi awal tertutupi dalam:</p>
+                        <p class="text-[11px] text-teal-600 font-medium">Modal alat & tempat kembali dalam:</p>
                     </div>
                     <div class="text-right">
                         <span class="text-xl font-black text-teal-700" id="resBEP">0 Bln</span>
@@ -153,27 +176,27 @@
 
             <!-- Visual Bar Sederhana -->
             <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-100">
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Komposisi Keuangan Bulanan</h3>
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Rasio Pengeluaran vs Keuntungan Bulanan</h3>
                 <div class="w-full bg-slate-100 h-4 rounded-full overflow-hidden flex" id="barChartContainer">
                     <div id="barOpEx" class="bg-rose-500 h-full transition-all duration-300" style="width: 50%"></div>
                     <div id="barProfit" class="bg-emerald-500 h-full transition-all duration-300" style="width: 50%"></div>
                 </div>
                 <div class="flex justify-between items-center text-[11px] font-semibold mt-2">
                     <div class="flex items-center gap-1.5 text-rose-600">
-                        <span class="w-2.5 h-2.5 bg-rose-500 rounded-full"></span> Biaya Operasional (<span id="pctOpEx">0%</span>)
+                        <span class="w-2.5 h-2.5 bg-rose-500 rounded-full"></span> Pengeluaran Operasional (<span id="pctOpEx">0%</span>)
                     </div>
                     <div class="flex items-center gap-1.5 text-emerald-600">
-                        <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full"></span> Profit Bersih (<span id="pctProfit">0%</span>)
+                        <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full"></span> Profit Bersih Murni (<span id="pctProfit">0%</span>)
                     </div>
                 </div>
             </div>
 
-            <!-- Tips & Analisa Real-time -->
+            <!-- Tips & Analisa Real-time Kuliner -->
             <div class="bg-amber-50 border border-amber-200/60 p-4 rounded-2xl">
                 <h4 class="text-xs font-bold text-amber-800 flex items-center gap-1.5 mb-1">
-                    <span>💡</span> Analisa & Tips Singkat:
+                    <span>💡</span> Analisa Bisnis Kuliner Anda:
                 </h4>
-                <p class="text-xs text-amber-900/80 leading-relaxed font-medium" id="bizAdvice">Masukkan angka untuk melihat analisis usahamu.</p>
+                <p class="text-xs text-amber-900/80 leading-relaxed font-medium" id="bizAdvice">Masukkan data kuliner untuk dianalisis.</p>
             </div>
 
         </div>
@@ -190,22 +213,32 @@
             const capExEquip = parseFloat(document.getElementById('capExEquip').value) || 0;
             const capExPlace = parseFloat(document.getElementById('capExPlace').value) || 0;
             
+            // Inputs Harian
+            const opExDailyRaw = parseFloat(document.getElementById('opExDailyRaw').value) || 0;
+            const opExDailyGas = parseFloat(document.getElementById('opExDailyGas').value) || 0;
+            
+            // Inputs Bulanan
             const opExRent = parseFloat(document.getElementById('opExRent').value) || 0;
-            const opExSupply = parseFloat(document.getElementById('opExSupply').value) || 0;
             const opExStaff = parseFloat(document.getElementById('opExStaff').value) || 0;
-            const opExOthers = parseFloat(document.getElementById('opExOthers').value) || 0; // Input baru
+            const opExOthers = parseFloat(document.getElementById('opExOthers').value) || 0;
             
             const pricePerUnit = parseFloat(document.getElementById('pricePerUnit').value) || 0;
             const targetQtyDay = parseFloat(document.getElementById('targetQtyDay').value) || 0;
 
-            // Perhitungan Bisnis
+            // Konversi Logika Harian ke Bulanan (Asumsi sebulan aktif 30 hari)
+            const totalDailyOpEx = opExDailyRaw + opExDailyGas;
+            const totalMonthlyOpExFromDaily = totalDailyOpEx * 30;
+            const totalFixedMonthlyOpEx = opExRent + opExStaff + opExOthers;
+            
+            // Akumulasi Akhir
             const totalCapEx = capExEquip + capExPlace;
-            const totalOpEx = opExRent + opExSupply + opExStaff + opExOthers; // Ditambahkan di sini
+            const totalOpExCombined = totalMonthlyOpExFromDaily + totalFixedMonthlyOpEx;
             
-            const grossRevenue = pricePerUnit * targetQtyDay * 30;
-            const netProfit = grossRevenue - totalOpEx;
+            const dailyRevenue = pricePerUnit * targetQtyDay;
+            const grossRevenue = dailyRevenue * 30;
+            const netProfit = grossRevenue - totalOpExCombined;
             
-            // BEP / Payback Period
+            // Perhitungan BEP / Balik Modal Alat
             let monthsToBEP = "∞";
             if (netProfit > 0) {
                 monthsToBEP = (totalCapEx / netProfit).toFixed(1) + " Bulan";
@@ -215,14 +248,15 @@
                 monthsToBEP = "Rugi";
             }
 
-            // Update Tampilan DOM
+            // Update DOM Hasil Tampilan
+            document.getElementById('resDailyRevenue').innerText = formatRupiah(dailyRevenue);
             document.getElementById('resTotalCapEx').innerText = formatRupiah(totalCapEx);
-            document.getElementById('resTotalOpEx').innerText = formatRupiah(totalOpEx);
+            document.getElementById('resTotalOpEx').innerText = formatRupiah(totalOpExCombined);
             document.getElementById('resGrossRevenue').innerText = formatRupiah(grossRevenue);
             document.getElementById('resNetProfit').innerText = formatRupiah(netProfit);
             document.getElementById('resBEP').innerText = monthsToBEP;
 
-            // Handle Perubahan Warna jika Rugi atau Untung
+            // Warna Indikator Profit
             const netProfitEl = document.getElementById('resNetProfit');
             if (netProfit < 0) {
                 netProfitEl.className = "text-2xl font-extrabold text-rose-600";
@@ -230,14 +264,14 @@
                 netProfitEl.className = "text-2xl font-extrabold text-teal-600";
             }
 
-            // Atur Grafik Batang Persentase Komposisi Keuangan
+            // Update Grafik Komposisi Persentase
             const barOpEx = document.getElementById('barOpEx');
             const barProfit = document.getElementById('barProfit');
             const pctOpExEl = document.getElementById('pctOpEx');
             const pctProfitEl = document.getElementById('pctProfit');
 
             if (grossRevenue > 0) {
-                let pctOpEx = (totalOpEx / grossRevenue) * 100;
+                let pctOpEx = (totalOpExCombined / grossRevenue) * 100;
                 let pctProfit = (netProfit / grossRevenue) * 100;
 
                 if (pctProfit < 0) {
@@ -257,27 +291,26 @@
                 pctProfitEl.innerText = '0%';
             }
 
-            // Logika Tips & Rekomendasi Dinamis
+            // Analisis Khusus Model Bisnis Makanan / Kuliner
             const adviceEl = document.getElementById('bizAdvice');
-            const bizName = document.getElementById('bizName').value || "Usaha ini";
+            const bizName = document.getElementById('bizName').value || "Usaha Kuliner Ini";
             
             if (netProfit < 0) {
-                adviceEl.innerText = `⚠️ Proyeksi untuk "${bizName}" saat ini masih mengalami defisit bulanan sebesar ${formatRupiah(Math.abs(netProfit))}. Cobalah tingkatkan target harian atau naikkan tarif jasa agar dapat menutup biaya operasional bulanan Anda.`;
+                adviceEl.innerText = `⚠️ Bisnis "${bizName}" berisiko rugi karena biaya harian & bulanan melampaui omset. Coba tinjau Food Cost (biaya belanja harian). Usahakan pengeluaran bahan baku maksimal berkisar 40-50% dari harga jual per porsi.`;
             } else if (netProfit === 0 && grossRevenue > 0) {
-                adviceEl.innerText = `⚖️ "${bizName}" berada di posisi pas-pasan (Break Even Bulanan). Anda hanya mengantongi uang kembali untuk modal kerja bulanan tanpa adanya profit murni. Naikkan tipis target penjualan harian Anda agar menghasilkan untung bersih!`;
+                adviceEl.innerText = `⚖️ Posisi impas! Anda lelah memasak dan berjualan tapi keuntungan murni habis untuk menutup modal operasional harian. Naikkan target porsi harian sedikit lagi atau tambahkan menu pendamping seperti minuman manis untuk menaikkan keuntungan murni.`;
             } else if (netProfit > 0) {
-                const bepFloat = totalCapEx / netProfit;
-                if (bepFloat <= 3) {
-                    adviceEl.innerText = `🔥 Sangat Bagus! Proyeksi bisnis "${bizName}" ini sangat sehat. Dengan estimasi balik modal dalam waktu ${monthsToBEP}, skema keuangan ini memiliki risiko yang rendah dan layak untuk segera dieksekusi.`;
+                const hppPersen = (totalDailyOpEx / dailyRevenue) * 100;
+                if (hppPersen > 60) {
+                    adviceEl.innerText = `📈 Untung, namun margin tipis! Pengeluaran harian belanja bahan untuk "${bizName}" memakan ${Math.round(hppPersen)}% dari pemasukan harian. Disarankan bernegosiasi dengan supplier bahan mentah agar profit bersih bulanan Anda bisa lebih maksimal.`;
                 } else {
-                    adviceEl.innerText = `👍 Proyeksi untuk "${bizName}" cukup stabil dengan profit bersih bulanan. Waktu balik modal sekitar ${monthsToBEP} tergolong wajar. Tips: Optimalkan efisiensi pada bahan baku bulanan atau biaya sewa agar BEP bisa berjalan lebih cepat lagi.`;
+                    adviceEl.innerText = `🔥 Sangat Sehat! Struktur pengeluaran kuliner "${bizName}" sudah ideal. Rasio margin keuntungan Anda kuat, dan estimasi balik modal alat hanya memakan waktu ${monthsToBEP}. Sangat prospektif untuk dijalankan!`;
                 }
             } else {
-                adviceEl.innerText = "Silakan tentukan target harga dan penjualan harian untuk mendapatkan analisis keuangan yang akurat.";
+                adviceEl.innerText = "Tentukan harga makanan dan target porsi terjual per hari untuk melihat analisa kelayakan bisnis kuliner.";
             }
         }
 
-        // Jalankan kalkulasi pertama kali otomatis saat aplikasi dimuat
         window.onload = function() {
             hitungSimulasi();
         };
