@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FoodBiz Pro - Sistem Manajemen Kuliner Terpadu</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -22,7 +20,6 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen pb-12">
 
-    <!-- Header Navigation -->
     <header class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white shadow-md sticky top-0 z-50 no-print">
         <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-3">
@@ -32,7 +29,6 @@
                     <p class="text-xs text-indigo-200">Sistem Kasir, Keuangan, Stok & Daftar Harga Terintegrasi</p>
                 </div>
             </div>
-            <!-- Menu Navigasi Utama -->
             <nav class="flex flex-wrap gap-2">
                 <button onclick="switchTab('tab-penjualan')" id="btn-tab-penjualan" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold transition bg-white text-blue-700 shadow-sm">
                     🛍️ Penjualan Harian
@@ -50,13 +46,10 @@
         </div>
     </header>
 
-    <!-- Main Container -->
     <main class="max-w-7xl mx-auto px-4 mt-8 no-print">
         
-        <!-- ================= TAB 1: PENJUALAN HARIAN ================= -->
         <div id="tab-penjualan" class="tab-content space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Form Input Order Aktif -->
                 <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
                     <div class="flex justify-between items-center border-b pb-3">
                         <h2 class="text-lg font-bold text-slate-700 flex items-center gap-2"><span>🛒</span> Input Order Pelanggan Baru</h2>
@@ -74,7 +67,6 @@
                         </div>
                     </div>
 
-                    <!-- Tabel Item Order -->
                     <div class="overflow-x-auto pt-2">
                         <table class="w-full text-left border-collapse">
                             <thead>
@@ -87,12 +79,10 @@
                                 </tr>
                             </thead>
                             <tbody id="orderItemsBody">
-                                <!-- Baris item dimasukkan secara dinamis -->
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
 
-                    <!-- Datallist global untuk rekomendasi menu otomatis -->
                     <datalist id="globalMenuList"></datalist>
 
                     <div class="flex flex-wrap gap-2 pt-2">
@@ -105,7 +95,6 @@
                     </div>
                 </div>
 
-                <!-- Ringkasan Transaksi / Keranjang Belanja -->
                 <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-lg flex flex-col justify-between">
                     <div class="space-y-4">
                         <h3 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Ringkasan Pembayaran</h3>
@@ -119,13 +108,12 @@
                         </div>
                     </div>
                     <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700/50 mt-6 text-xs text-slate-300 space-y-1">
-                        <p class="font-bold text-amber-400">💡 Bebas Ketik Manual:</p>
-                        <p>Anda bisa memilih menu yang ada atau langsung <b>mengetik sendiri</b> nama barang kustom/lain-lain, lalu tentukan harga satuannya.</p>
+                        <p class="font-bold text-amber-400">💡 Informasi Terintegrasi:</p>
+                        <p>Penjualan menu yang namanya cocok dengan **Stok Barang** otomatis akan mengurangi kuantitas di gudang inventori secara *real-time*.</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Rekap Histori Penjualan Harian -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                 <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
                     <span>📜</span> Log Riwayat Penjualan Harian Tersimpan
@@ -139,18 +127,16 @@
                                 <th class="p-3">Pelanggan</th>
                                 <th class="p-3">Detail Menu Order</th>
                                 <th class="p-3 text-right">Total Transaksi</th>
-                                <th class="p-3 text-center">Aksi Receipt</th>
+                                <th class="p-3 text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="salesLogTableBody">
-                            <!-- Data log penjualan akan muncul di sini -->
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- ================= TAB 2: LAPORAN KEUANGAN ================= -->
         <div id="tab-laporan" class="tab-content hidden space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-emerald-100 flex items-center gap-4">
@@ -163,7 +149,7 @@
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100 flex items-center gap-4">
                     <div class="p-3 bg-rose-50 text-rose-600 rounded-xl text-2xl">🛒</div>
                     <div>
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Total Pengeluaran (Biaya/Belanja)</span>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Total Pengeluaran (Biaya)</span>
                         <h2 class="text-xl font-black text-rose-600" id="finTotalExpense">Rp 0</h2>
                     </div>
                 </div>
@@ -177,10 +163,9 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Form Input Pengeluaran / Biaya Operasional & Belanja -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
                     <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider border-b pb-2 flex items-center gap-1.5">
-                        <span>💸</span> Catat Pengeluaran Baru (Belanja/Biaya)
+                        <span>💸</span> Catat Pengeluaran Baru
                     </h3>
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal</label>
@@ -209,14 +194,20 @@
                     </button>
                 </div>
 
-                <!-- Jurnal Keuangan -->
                 <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between">
                     <div>
-                        <div class="flex justify-between items-center mb-4">
+                        <div class="flex flex-wrap justify-between items-center gap-2 mb-4">
                             <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
                                 <span>📖</span> Jurnal Arus Kas Keuangan Terintegrasi
                             </h3>
-                            <button onclick="clearSemuaDataKeuangan()" class="text-rose-500 hover:text-rose-700 text-xs font-semibold border border-rose-100 px-2 py-1 rounded-lg hover:bg-rose-5">Reset Log</button>
+                            <div class="flex gap-2">
+                                <button onclick="eksporLaporanKeuanganKeCSV()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-xl border border-emerald-200 transition">
+                                    📥 Ekspor CSV
+                                </button>
+                                <button onclick="clearSemuaDataKeuangan()" class="text-rose-500 hover:text-rose-700 text-xs font-semibold border border-rose-100 px-2 py-1.5 rounded-xl hover:bg-rose-50 transition">
+                                    Reset Log
+                                </button>
+                            </div>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-sm">
@@ -228,11 +219,11 @@
                                         <th class="p-3">Keterangan</th>
                                         <th class="p-3 text-right">Debit (Masuk)</th>
                                         <th class="p-3 text-right">Kredit (Keluar)</th>
+                                        <th class="p-3 text-center w-10">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody id="ledgerTableBody">
-                                    <!-- Jurnal Kas Otomatis Terisi -->
-                                </tbody>
+                                    </tbody>
                             </table>
                         </div>
                     </div>
@@ -240,30 +231,40 @@
             </div>
         </div>
 
-        <!-- ================= TAB 3: STOK BARANG (UPDATE TANGGAL) ================= -->
         <div id="tab-stok" class="tab-content hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Tambah / Update Pengadaan Stok -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
                     <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider border-b pb-2 flex items-center gap-1.5">
                         <span>📦</span> Manajemen & Input Stok Gudang
                     </h3>
-                    <!-- INPUT TANGGAL BARU DI SINI -->
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Pencatatan / Opname</label>
                         <input type="date" id="stockDate" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 font-medium">
                     </div>
                     <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Metode Input Kuantitas</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex items-center gap-2 p-2 bg-slate-50 rounded-xl border border-slate-200 text-xs cursor-pointer">
+                                <input type="radio" name="stockMethod" value="add" checked class="text-indigo-600 focus:ring-indigo-500">
+                                <span>➕ Tambah Stok</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-2 bg-slate-50 rounded-xl border border-slate-200 text-xs cursor-pointer">
+                                <input type="radio" name="stockMethod" value="set" class="text-indigo-600 focus:ring-indigo-500">
+                                <span>🔄 Opname Baru</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Barang / Bahan Baku</label>
-                        <input type="text" id="stockName" placeholder="Contoh: Daging Ayam (kg) / Mika Box" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 font-medium">
+                        <input type="text" id="stockName" placeholder="Contoh: Daging Ayam / Mika Box" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 font-medium">
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Jumlah Stok</label>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Jumlah</label>
                             <input type="number" id="stockQty" placeholder="10" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 font-semibold">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Estimasi Nilai / Harga (Rp)</label>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Estimasi Harga (Rp)</label>
                             <input type="number" id="stockPrice" placeholder="35000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500">
                         </div>
                     </div>
@@ -276,7 +277,6 @@
                     </button>
                 </div>
 
-                <!-- Daftar Ketersediaan Stok -->
                 <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                     <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
                         <span>📋</span> Real-time Ketersediaan Stok Inventori Gudang
@@ -295,18 +295,15 @@
                                 </tr>
                             </thead>
                             <tbody id="stockTableBody">
-                                <!-- Data Stok -->
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ================= TAB 4: DAFTAR HARGA MENU ================= -->
         <div id="tab-harga" class="tab-content hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Form Tambah Menu -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
                     <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider border-b pb-2 flex items-center gap-1.5">
                         <span>📝</span> Daftarkan Menu / Produk Baru
@@ -333,7 +330,6 @@
                     </button>
                 </div>
 
-                <!-- Katalog Tabel Daftar Harga Resmi -->
                 <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                     <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
                         <span>📜</span> Master Katalog Daftar Harga Produk Kuliner Terhubung Kasir
@@ -349,8 +345,7 @@
                                 </tr>
                             </thead>
                             <tbody id="priceListTableBody">
-                                <!-- Data Daftar Harga -->
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
                 </div>
@@ -359,7 +354,6 @@
 
     </main>
 
-    <!-- AREA STRUK CETAK INVOICE -->
     <div id="printReceiptArea" class="hidden p-6 bg-white text-black font-mono text-sm max-w-sm mx-auto">
         <div class="text-center space-y-1">
             <h2 class="text-xl font-bold uppercase" id="receiptBizName">FOODBIZ PRO OUTLET</h2>
@@ -395,17 +389,15 @@
     </div>
 
 
-    <!-- ================= JAVASCRIPT LOGIKA UTAMA ================= -->
     <script>
         let dbMenu = JSON.parse(localStorage.getItem('fbp_menu')) || [
             { id: 1, name: "Ayam Bakar Komplit", price: 20000, category: "Makanan Utama" },
             { id: 2, name: "Es Teh Manis Jumbo", price: 5000, category: "Minuman" }
         ];
 
-        // Format data awal dbStok disesuaikan agar memiliki key 'date'
         let dbStok = JSON.parse(localStorage.getItem('fbp_stok')) || [
-            { id: 1, date: "2026-07-07", name: "Daging Ayam", qty: 25, price: 35000, unit: "Kilogram" },
-            { id: 2, date: "2026-07-07", name: "Beras Premium", qty: 50, price: 14000, unit: "Kilogram" }
+            { id: 1, date: "2026-07-07", name: "Ayam Bakar Komplit", qty: 25, price: 15000, unit: "Porsi" },
+            { id: 2, date: "2026-07-07", name: "Es Teh Manis Jumbo", qty: 50, price: 1500, unit: "Gelas" }
         ];
 
         let dbTransaksi = JSON.parse(localStorage.getItem('fbp_transaksi')) || [];
@@ -452,7 +444,7 @@
                     <input type="number" value="1" min="1" oninput="hitungUlangKeranjang()" class="item-qty w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-semibold text-center focus:outline-blue-500">
                 </td>
                 <td class="py-2 px-1">
-                    <input type="number" value="0" oninput="hitungUlangKeranjang()" class="item-price w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-semibold focus:outline-blue-500">
+                    <input type="number" value="0" min="0" oninput="hitungUlangKeranjang()" class="item-price w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-semibold focus:outline-blue-500">
                 </td>
                 <td class="py-2 pl-2 text-xs font-bold text-slate-600"><span class="item-subtotal">Rp 0</span></td>
                 <td class="py-2 text-center">
@@ -519,6 +511,23 @@
             renderSemuaHalaman();
         }
 
+        function hapusTransaksi(id) {
+            if (confirm("Apakah Anda yakin ingin membatalkan transaksi (Void) ini? Stok terpotong akan dikembalikan.")) {
+                const trx = dbTransaksi.find(t => t.id === id);
+                if (trx) {
+                    // Kembalikan stok
+                    trx.items.forEach(item => {
+                        let stokCocok = dbStok.find(s => s.name.toLowerCase() === item.name.toLowerCase());
+                        if (stokCocok) stokCocok.qty += item.qty;
+                    });
+                    dbTransaksi = dbTransaksi.filter(t => t.id !== id);
+                    localStorage.setItem('fbp_transaksi', JSON.stringify(dbTransaksi));
+                    localStorage.setItem('fbp_stok', JSON.stringify(dbStok));
+                    renderSemuaHalaman();
+                }
+            }
+        }
+
         function cetakStrukNotaPdf(id) {
             const trx = dbTransaksi.find(t => t.id === id);
             if (!trx) return;
@@ -550,8 +559,16 @@
             renderSemuaHalaman();
         }
 
+        function hapusPengeluaran(id) {
+            if (confirm("Hapus catatan pengeluaran ini?")) {
+                dbPengeluaran = dbPengeluaran.filter(e => e.id !== id);
+                localStorage.setItem('fbp_pengeluaran', JSON.stringify(dbPengeluaran));
+                renderSemuaHalaman();
+            }
+        }
+
         function clearSemuaDataKeuangan() {
-            if(confirm("Hapus seluruh log riwayat?")) {
+            if(confirm("Hapus seluruh log riwayat kas & transaksi?")) {
                 dbTransaksi = []; dbPengeluaran = [];
                 localStorage.setItem('fbp_transaksi', JSON.stringify([]));
                 localStorage.setItem('fbp_pengeluaran', JSON.stringify([]));
@@ -559,29 +576,56 @@
             }
         }
 
-        // --- TAB 3: STOK BARANG (LOGIKA TANGGAL TERINTEGRASI) ---
+        function eksporLaporanKeuanganKeCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Tanggal,Tipe,Kategori,Keterangan,Debit (Masuk),Kredit (Keluar)\n";
+            
+            let gabunganArusKas = [];
+            dbTransaksi.forEach(t => { gabunganArusKas.push({ date: t.date, type: "MASUK", category: "Penjualan", note: t.customer, debit: t.total, credit: 0 }); });
+            dbPengeluaran.forEach(e => { gabunganArusKas.push({ date: e.date, type: "KELUAR", category: e.category, note: e.note, debit: 0, credit: e.amount }); });
+            gabunganArusKas.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            gabunganArusKas.forEach(k => {
+                csvContent += `${k.date},${k.type},${k.category},${k.note},${k.debit},${k.credit}\n`;
+            });
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Laporan_Keuangan_FoodBiz_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // --- TAB 3: STOK BARANG ---
         function simpanStokBarang() {
-            const date = document.getElementById('stockDate').value; // Ambil nilai tanggal baru
-            const name = document.getElementById('stockName').value;
+            const date = document.getElementById('stockDate').value;
+            const method = document.querySelector('input[name="stockMethod"]:checked').value;
+            const name = document.getElementById('stockName').value.trim();
             const qty = parseFloat(document.getElementById('stockQty').value) || 0;
             const price = parseFloat(document.getElementById('stockPrice').value) || 0;
             const unit = document.getElementById('stockUnit').value || "Unit";
 
-            if (!date) { alert("Harap tentukan Tanggal Pencatatan/Opname terlebih dahulu!"); return; }
-            if (!name || qty < 0) { alert("Harap isi nama komponen barang dan kuantitas!"); return; }
+            if (!date) { alert("Harap tentukan Tanggal Pencatatan!"); return; }
+            if (!name || qty < 0) { alert("Harap isi nama barang dan kuantitas!"); return; }
 
             let eksis = dbStok.find(s => s.name.toLowerCase() === name.toLowerCase());
             if (eksis) {
-                eksis.date = date; // Update tanggal pencatatan terbaru
-                eksis.qty = qty;
-                eksis.price = price;
-                eksis.unit = unit;
+                eksis.date = date;
+                if (method === 'add') {
+                    eksis.qty += qty; // Menambahkan ke stok yang sudah ada
+                } else {
+                    eksis.qty = qty;  // Menimpa nilai stok lama (Opname)
+                }
+                if(price > 0) eksis.price = price;
+                if(unit !== "Unit") eksis.unit = unit;
             } else {
                 dbStok.push({ id: Date.now(), date, name, qty, price, unit });
             }
 
             localStorage.setItem('fbp_stok', JSON.stringify(dbStok));
-            alert(`📦 Stok "${name}" berhasil diperbarui dengan tanggal pencatatan ${date}!`);
+            alert(`📦 Stok "${name}" berhasil diperbarui!`);
 
             document.getElementById('stockName').value = "";
             document.getElementById('stockQty').value = "";
@@ -593,7 +637,7 @@
 
         // --- TAB 4: DAFTAR HARGA MENU ---
         function simpanMenuHarga() {
-            const name = document.getElementById('menuItemName').value;
+            const name = document.getElementById('menuItemName').value.trim();
             const price = parseFloat(document.getElementById('menuItemPrice').value) || 0;
             const category = document.getElementById('menuItemCategory').value;
 
@@ -623,15 +667,15 @@
                 let htmlTrx = "";
                 dbTransaksi.forEach(t => {
                     let itemsStr = t.items.map(i => `${i.name} (${i.qty}x)`).join(', ');
-                    htmlTrx += `<tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-3 text-xs font-mono font-bold text-slate-600">${t.id}</td><td class="p-3 text-xs font-medium">${t.date}</td><td class="p-3 text-xs font-bold text-blue-700">${t.customer}</td><td class="p-3 text-xs text-slate-600 truncate max-w-xs">${itemsStr}</td><td class="p-3 text-xs font-black text-right text-emerald-600">${formatRupiah(t.total)}</td><td class="p-3 text-center"><button onclick="cetakStrukNotaPdf('${t.id}')" class="bg-blue-50 hover:bg-blue-100 text-blue-700 text-[11px] font-bold px-2.5 py-1 rounded-lg">🖨️ Struk</button></td></tr>`;
+                    htmlTrx += `<tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-3 text-xs font-mono font-bold text-slate-600">${t.id}</td><td class="p-3 text-xs font-medium">${t.date}</td><td class="p-3 text-xs font-bold text-blue-700">${t.customer}</td><td class="p-3 text-xs text-slate-600 truncate max-w-xs">${itemsStr}</td><td class="p-3 text-xs font-black text-right text-emerald-600">${formatRupiah(t.total)}</td><td class="p-3 text-center flex justify-center gap-1"><button onclick="cetakStrukNotaPdf('${t.id}')" class="bg-blue-50 hover:bg-blue-100 text-blue-700 text-[11px] font-bold px-2 py-1 rounded-lg">🖨️ Struk</button><button onclick="hapusTransaksi('${t.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-700 text-[11px] font-bold px-2 py-1 rounded-lg">✕ Void</button></td></tr>`;
                 });
                 salesLogBody.innerHTML = htmlTrx;
             }
 
             // 2. Jurnal Arus Kas
             let totalRevenue = 0; let totalExpense = 0; let gabunganArusKas = [];
-            dbTransaksi.forEach(t => { totalRevenue += t.total; gabunganArusKas.push({ date: t.date, type: "MASUK (OMSET)", category: "Penjualan Kasir", note: `Pelanggan: ${t.customer}`, debit: t.total, credit: 0 }); });
-            dbPengeluaran.forEach(e => { totalExpense += e.amount; gabunganArusKas.push({ date: e.date, type: "KELUAR (BIAYA)", category: e.category, note: e.note, debit: 0, credit: e.amount }); });
+            dbTransaksi.forEach(t => { totalRevenue += t.total; gabunganArusKas.push({ id: t.id, date: t.date, type: "MASUK (OMSET)", category: "Penjualan Kasir", note: `Pelanggan: ${t.customer}`, debit: t.total, credit: 0, isTrx: true }); });
+            dbPengeluaran.forEach(e => { totalExpense += e.amount; gabunganArusKas.push({ id: e.id, date: e.date, type: "KELUAR (BIAYA)", category: e.category, note: e.note, debit: 0, credit: e.amount, isTrx: false }); });
             gabunganArusKas.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             document.getElementById('finTotalRevenue').innerText = formatRupiah(totalRevenue);
@@ -640,23 +684,23 @@
 
             const ledgerBody = document.getElementById('ledgerTableBody');
             if (gabunganArusKas.length === 0) {
-                ledgerBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-xs text-slate-400">Belum ada aktivitas kas.</td></tr>`;
+                ledgerBody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-xs text-slate-400">Belum ada aktivitas kas.</td></tr>`;
             } else {
                 let htmlLedger = "";
                 gabunganArusKas.forEach(k => {
-                    htmlLedger += `<tr class="border-b border-slate-100 text-xs"><td class="p-3 font-medium">${k.date}</td><td class="p-3 font-bold ${k.debit > 0 ? 'text-emerald-600' : 'text-rose-600'}">${k.type}</td><td class="p-3 text-slate-700 font-medium">${k.category}</td><td class="p-3 text-slate-500">${k.note}</td><td class="p-3 text-right font-bold text-emerald-600">${k.debit > 0 ? formatRupiah(k.debit) : '-'}</td><td class="p-3 text-right font-bold text-rose-600">${k.credit > 0 ? formatRupiah(k.credit) : '-'}</td></tr>`;
+                    let btnHapus = k.isTrx ? '-' : `<button onclick="hapusPengeluaran('${k.id}')" class="text-rose-400 hover:text-rose-600 font-bold">✕</button>`;
+                    htmlLedger += `<tr class="border-b border-slate-100 text-xs"><td class="p-3 font-medium">${k.date}</td><td class="p-3 font-bold ${k.debit > 0 ? 'text-emerald-600' : 'text-rose-600'}">${k.type}</td><td class="p-3 text-slate-700 font-medium">${k.category}</td><td class="p-3 text-slate-500">${k.note}</td><td class="p-3 text-right font-bold text-emerald-600">${k.debit > 0 ? formatRupiah(k.debit) : '-'}</td><td class="p-3 text-right font-bold text-rose-600">${k.credit > 0 ? formatRupiah(k.credit) : '-'}</td><td class="p-3 text-center">${btnHapus}</td></tr>`;
                 });
                 ledgerBody.innerHTML = htmlLedger;
             }
 
-            // 3. Render Ketersediaan Stok (DENGAN KOLOM TANGGAL NYATA)
+            // 3. Render Ketersediaan Stok
             const stockBody = document.getElementById('stockTableBody');
             let htmlStok = "";
             dbStok.forEach(s => {
                 let statusBadge = s.qty <= 5 ? `<span class="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded-full font-bold">⚠️ Menipis</span>` : `<span class="bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded-full font-bold">✓ Aman</span>`;
                 if(s.qty === 0) statusBadge = `<span class="bg-rose-100 text-rose-800 text-[10px] px-2 py-0.5 rounded-full font-bold">❌ Habis</span>`;
                 
-                // Nilai tanggal default jika data lama kosong
                 let tanggalTampil = s.date ? s.date : "-";
 
                 htmlStok += `
@@ -688,7 +732,7 @@
             const hariIni = new Date().toISOString().split('T')[0];
             document.getElementById('orderDate').value = hariIni;
             document.getElementById('expDate').value = hariIni;
-            document.getElementById('stockDate').value = hariIni; // Set default date input stok harian otomatis
+            document.getElementById('stockDate').value = hariIni;
 
             setInterval(() => {
                 document.getElementById('liveClock').innerText = "Kasir Aktif: " + new Date().toLocaleTimeString('id-ID') + " WIB";
