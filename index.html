@@ -128,7 +128,7 @@
             <!-- Rekap Histori Penjualan Harian -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                 <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <span>📜</span> Log Riwayat Penjualan Harian Terimpan
+                    <span>📜</span> Log Riwayat Penjualan Harian Tersimpan
                 </h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm">
@@ -209,7 +209,7 @@
                     </button>
                 </div>
 
-                <!-- Buku Besar Buku Arus Kas Jurnal Keuangan -->
+                <!-- Jurnal Keuangan -->
                 <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between">
                     <div>
                         <div class="flex justify-between items-center mb-4">
@@ -240,7 +240,7 @@
             </div>
         </div>
 
-        <!-- ================= TAB 3: STOK BARANG ================= -->
+        <!-- ================= TAB 3: STOK BARANG (UPDATE TANGGAL) ================= -->
         <div id="tab-stok" class="tab-content hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Tambah / Update Pengadaan Stok -->
@@ -248,6 +248,11 @@
                     <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider border-b pb-2 flex items-center gap-1.5">
                         <span>📦</span> Manajemen & Input Stok Gudang
                     </h3>
+                    <!-- INPUT TANGGAL BARU DI SINI -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Pencatatan / Opname</label>
+                        <input type="date" id="stockDate" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 font-medium">
+                    </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Barang / Bahan Baku</label>
                         <input type="text" id="stockName" placeholder="Contoh: Daging Ayam (kg) / Mika Box" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 font-medium">
@@ -280,11 +285,12 @@
                         <table class="w-full text-left text-sm">
                             <thead>
                                 <tr class="bg-slate-50 border-b border-slate-100 text-xs font-bold text-slate-500 uppercase">
+                                    <th class="p-3">Tanggal Catat</th>
                                     <th class="p-3">Nama Barang</th>
-                                    <th class="p-3 text-center">Jumlah Stok Tersedia</th>
+                                    <th class="p-3 text-center">Jumlah Stok</th>
                                     <th class="p-3">Satuan Unit</th>
                                     <th class="p-3 text-right">Nilai Satuan</th>
-                                    <th class="p-3">Keterangan Status</th>
+                                    <th class="p-3">Status</th>
                                     <th class="p-3 text-center w-12">Hapus</th>
                                 </tr>
                             </thead>
@@ -353,7 +359,7 @@
 
     </main>
 
-    <!-- ================= AREA STRUK CETAK INVOICE ================= -->
+    <!-- AREA STRUK CETAK INVOICE -->
     <div id="printReceiptArea" class="hidden p-6 bg-white text-black font-mono text-sm max-w-sm mx-auto">
         <div class="text-center space-y-1">
             <h2 class="text-xl font-bold uppercase" id="receiptBizName">FOODBIZ PRO OUTLET</h2>
@@ -375,9 +381,7 @@
                     <th class="pb-1 text-right">Total</th>
                 </tr>
             </thead>
-            <tbody id="receiptItemsBody">
-                <!-- Baris item cetak struk -->
-            </tbody>
+            <tbody id="receiptItemsBody"></tbody>
         </table>
         <div class="border-b border-dashed border-black my-3"></div>
         <div class="flex justify-between font-bold text-sm">
@@ -387,7 +391,6 @@
         <div class="border-b border-dashed border-black my-3"></div>
         <div class="text-center text-[10px] space-y-1 mt-4">
             <p>Terima Kasih Atas Kunjungan & Order Anda!</p>
-            <p>Laporan transaksi ini telah otomatis tersimpan ke Buku Laporan Keuangan Pusat.</p>
         </div>
     </div>
 
@@ -399,9 +402,10 @@
             { id: 2, name: "Es Teh Manis Jumbo", price: 5000, category: "Minuman" }
         ];
 
+        // Format data awal dbStok disesuaikan agar memiliki key 'date'
         let dbStok = JSON.parse(localStorage.getItem('fbp_stok')) || [
-            { id: 1, name: "Daging Ayam", qty: 25, price: 35000, unit: "Kilogram" },
-            { id: 2, name: "Beras Premium", qty: 50, price: 14000, unit: "Kilogram" }
+            { id: 1, date: "2026-07-07", name: "Daging Ayam", qty: 25, price: 35000, unit: "Kilogram" },
+            { id: 2, date: "2026-07-07", name: "Beras Premium", qty: 50, price: 14000, unit: "Kilogram" }
         ];
 
         let dbTransaksi = JSON.parse(localStorage.getItem('fbp_transaksi')) || [];
@@ -427,13 +431,11 @@
             return "Rp " + Math.round(angka).toLocaleString('id-ID');
         }
 
-        // --- MANAJEMEN TAB 1: PENJUALAN HARIAN (MENGGUNAKAN DATALIST BISA KETIK MANUAL) ---
+        // --- TAB 1: PENJUALAN ---
         function updateGlobalMenuListDatalist() {
             const datalist = document.getElementById('globalMenuList');
             let options = '';
-            dbMenu.forEach(item => {
-                options += `<option value="${item.name}"></option>`;
-            });
+            dbMenu.forEach(item => { options += `<option value="${item.name}"></option>`; });
             datalist.innerHTML = options;
         }
 
@@ -444,7 +446,7 @@
             
             tr.innerHTML = `
                 <td class="py-2 pr-2">
-                    <input type="text" list="globalMenuList" oninput="updateOtomatisHargaBaris(this)" placeholder="Ketik nama menu / barang..." class="item-name-input w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-medium focus:outline-blue-500">
+                    <input type="text" list="globalMenuList" oninput="updateOtomatisHargaBaris(this)" placeholder="Ketik nama menu..." class="item-name-input w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-medium focus:outline-blue-500">
                 </td>
                 <td class="py-2 px-1">
                     <input type="number" value="1" min="1" oninput="hitungUlangKeranjang()" class="item-qty w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-semibold text-center focus:outline-blue-500">
@@ -452,9 +454,7 @@
                 <td class="py-2 px-1">
                     <input type="number" value="0" oninput="hitungUlangKeranjang()" class="item-price w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-semibold focus:outline-blue-500">
                 </td>
-                <td class="py-2 pl-2 text-xs font-bold text-slate-600">
-                    <span class="item-subtotal">Rp 0</span>
-                </td>
+                <td class="py-2 pl-2 text-xs font-bold text-slate-600"><span class="item-subtotal">Rp 0</span></td>
                 <td class="py-2 text-center">
                     <button type="button" onclick="this.closest('tr').remove(); hitungUlangKeranjang();" class="text-rose-400 hover:text-rose-600 text-xs font-bold px-1">✕</button>
                 </td>
@@ -464,33 +464,22 @@
 
         function updateOtomatisHargaBaris(inputEl) {
             const val = inputEl.value;
-            // Cari apakah teks yang diketik cocok dengan Master Menu terdaftar
             const cocokMenu = dbMenu.find(m => m.name.toLowerCase() === val.toLowerCase());
             const tr = inputEl.closest('tr');
-            
-            if (cocokMenu) {
-                // Jika cocok, isi harganya otomatis
-                tr.querySelector('.item-price').value = cocokMenu.price;
-            }
+            if (cocokMenu) tr.querySelector('.item-price').value = cocokMenu.price;
             hitungUlangKeranjang();
         }
 
         function hitungUlangKeranjang() {
             const rows = document.querySelectorAll('.row-order-item');
-            let totalItems = 0;
-            let grandTotal = 0;
-
+            let totalItems = 0; let grandTotal = 0;
             rows.forEach(row => {
                 const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
                 const price = parseFloat(row.querySelector('.item-price').value) || 0;
                 const subtotal = qty * price;
-
-                totalItems += qty;
-                grandTotal += subtotal;
-
+                totalItems += qty; grandTotal += subtotal;
                 row.querySelector('.item-subtotal').innerText = formatRupiah(subtotal);
             });
-
             document.getElementById('cartTotalItems').innerText = totalItems + " item";
             document.getElementById('cartGrandTotal').innerText = formatRupiah(grandTotal);
         }
@@ -500,12 +489,10 @@
             const customer = document.getElementById('customerName').value || "Pelanggan Umum";
             const rows = document.querySelectorAll('.row-order-item');
 
-            if (!date) { alert("Harap isi Tanggal Transaksi terlebih dahulu!"); return; }
-            if (rows.length === 0) { alert("Tambahkan minimal 1 item menu pilihan sebelum menyimpan!"); return; }
+            if (!date) { alert("Harap isi Tanggal Transaksi!"); return; }
+            if (rows.length === 0) { alert("Tambahkan minimal 1 item!"); return; }
 
-            let itemsOrdered = [];
-            let totalTransaksi = 0;
-
+            let itemsOrdered = []; let totalTransaksi = 0;
             rows.forEach(row => {
                 const name = row.querySelector('.item-name-input').value;
                 const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
@@ -515,119 +502,86 @@
                     itemsOrdered.push({ name, qty, price, subtotal: qty * price });
                     totalTransaksi += (qty * price);
 
-                    let stokCocok = dbStok.find(s => s.name.toLowerCase() === name.toLowerCase() || name.toLowerCase().includes(s.name.toLowerCase()));
-                    if (stokCocok) {
-                        stokCocok.qty = Math.max(0, stokCocok.qty - qty);
-                    }
+                    let stokCocok = dbStok.find(s => s.name.toLowerCase() === name.toLowerCase());
+                    if (stokCocok) stokCocok.qty = Math.max(0, stokCocok.qty - qty);
                 }
             });
 
-            if (itemsOrdered.length === 0) { alert("Harap tentukan nama menu kuliner yang valid!"); return; }
-
-            const trx = {
-                id: "TRX-" + Date.now(),
-                timestamp: new Date().toLocaleTimeString('id-ID'),
-                date: date,
-                customer: customer,
-                items: itemsOrdered,
-                total: totalTransaksi
-            };
-
+            const trx = { id: "TRX-" + Date.now(), timestamp: new Date().toLocaleTimeString('id-ID'), date, customer, items: itemsOrdered, total: totalTransaksi };
             dbTransaksi.unshift(trx);
             localStorage.setItem('fbp_transaksi', JSON.stringify(dbTransaksi));
             localStorage.setItem('fbp_stok', JSON.stringify(dbStok));
 
-            alert(`✅ Transaksi ${trx.id} Berhasil Disimpan & Sinkron ke Laporan Keuangan!`);
-            
+            alert("✅ Transaksi Berhasil Disimpan!");
             document.getElementById('customerName').value = "";
             document.getElementById('orderItemsBody').innerHTML = "";
-            hitungUlangKeranjang();
-
-            addOrderItemRow(); // Beri baris kosong baru
+            addOrderItemRow();
             renderSemuaHalaman();
         }
 
         function cetakStrukNotaPdf(id) {
             const trx = dbTransaksi.find(t => t.id === id);
             if (!trx) return;
-
             document.getElementById('receiptDate').innerText = trx.date;
             document.getElementById('receiptCustomer').innerText = trx.customer;
             document.getElementById('receiptTime').innerText = "Waktu: " + trx.timestamp;
             document.getElementById('receiptGrandTotal').innerText = formatRupiah(trx.total);
-
             let htmlItems = "";
             trx.items.forEach(item => {
-                htmlItems += `
-                    <tr class="border-b border-black">
-                        <td class="py-1">${item.name}</td>
-                        <td class="py-1 text-center">${item.qty}</td>
-                        <td class="py-1 text-right">${formatRupiah(item.price)}</td>
-                        <td class="py-1 text-right">${formatRupiah(item.subtotal)}</td>
-                    </tr>
-                `;
+                htmlItems += `<tr class="border-b border-black"><td class="py-1">${item.name}</td><td class="py-1 text-center">${item.qty}</td><td class="py-1 text-right">${formatRupiah(item.price)}</td><td class="py-1 text-right">${formatRupiah(item.subtotal)}</td></tr>`;
             });
             document.getElementById('receiptItemsBody').innerHTML = htmlItems;
             window.print();
         }
 
-        // --- MANAJEMEN TAB 2: LAPORAN KEUANGAN ---
+        // --- TAB 2: LAPORAN KEUANGAN ---
         function simpanPengeluaran() {
             const date = document.getElementById('expDate').value;
             const category = document.getElementById('expCategory').value;
             const amount = parseFloat(document.getElementById('expAmount').value) || 0;
             const note = document.getElementById('expNote').value || "-";
 
-            if (!date || amount <= 0) { alert("Lengkapi data Tanggal dan Nominal Biaya dengan benar!"); return; }
-
-            const exp = {
-                id: "EXP-" + Date.now(),
-                date: date,
-                category: category,
-                amount: amount,
-                note: note
-            };
-
+            if (!date || amount <= 0) { alert("Lengkapi Tanggal dan Nominal!"); return; }
+            const exp = { id: "EXP-" + Date.now(), date, category, amount, note };
             dbPengeluaran.unshift(exp);
             localStorage.setItem('fbp_pengeluaran', JSON.stringify(dbPengeluaran));
-
-            alert("✅ Catatan Pengeluaran Biaya berhasil ditambahkan!");
             document.getElementById('expAmount').value = "";
             document.getElementById('expNote').value = "";
-
             renderSemuaHalaman();
         }
 
         function clearSemuaDataKeuangan() {
-            if(confirm("Apakah Anda yakin ingin menghapus seluruh log riwayat transaksi dan pengeluaran?")) {
-                dbTransaksi = [];
-                dbPengeluaran = [];
+            if(confirm("Hapus seluruh log riwayat?")) {
+                dbTransaksi = []; dbPengeluaran = [];
                 localStorage.setItem('fbp_transaksi', JSON.stringify([]));
                 localStorage.setItem('fbp_pengeluaran', JSON.stringify([]));
                 renderSemuaHalaman();
             }
         }
 
-        // --- MANAJEMEN TAB 3: STOK BARANG ---
+        // --- TAB 3: STOK BARANG (LOGIKA TANGGAL TERINTEGRASI) ---
         function simpanStokBarang() {
+            const date = document.getElementById('stockDate').value; // Ambil nilai tanggal baru
             const name = document.getElementById('stockName').value;
             const qty = parseFloat(document.getElementById('stockQty').value) || 0;
             const price = parseFloat(document.getElementById('stockPrice').value) || 0;
             const unit = document.getElementById('stockUnit').value || "Unit";
 
-            if (!name || qty < 0) { alert("Harap isi nama komponen barang dan jumlah kuantitas!"); return; }
+            if (!date) { alert("Harap tentukan Tanggal Pencatatan/Opname terlebih dahulu!"); return; }
+            if (!name || qty < 0) { alert("Harap isi nama komponen barang dan kuantitas!"); return; }
 
             let eksis = dbStok.find(s => s.name.toLowerCase() === name.toLowerCase());
             if (eksis) {
+                eksis.date = date; // Update tanggal pencatatan terbaru
                 eksis.qty = qty;
                 eksis.price = price;
                 eksis.unit = unit;
             } else {
-                dbStok.push({ id: Date.now(), name, qty, price, unit });
+                dbStok.push({ id: Date.now(), date, name, qty, price, unit });
             }
 
             localStorage.setItem('fbp_stok', JSON.stringify(dbStok));
-            alert(`📦 Stok "${name}" berhasil diperbarui di gudang!`);
+            alert(`📦 Stok "${name}" berhasil diperbarui dengan tanggal pencatatan ${date}!`);
 
             document.getElementById('stockName').value = "";
             document.getElementById('stockQty').value = "";
@@ -637,100 +591,47 @@
             renderSemuaHalaman();
         }
 
-        // --- MANAJEMEN TAB 4: DAFTAR HARGA MENU ---
+        // --- TAB 4: DAFTAR HARGA MENU ---
         function simpanMenuHarga() {
             const name = document.getElementById('menuItemName').value;
             const price = parseFloat(document.getElementById('menuItemPrice').value) || 0;
             const category = document.getElementById('menuItemCategory').value;
 
-            if (!name || price <= 0) { alert("Harap lengkapi Nama Menu Kuliner dan Harga Jual Resmi!"); return; }
-
+            if (!name || price <= 0) { alert("Lengkapi Nama Menu dan Harga Jual!"); return; }
             let eksis = dbMenu.find(m => m.name.toLowerCase() === name.toLowerCase());
-            if (eksis) {
-                eksis.price = price;
-                eksis.category = category;
-            } else {
-                dbMenu.push({ id: Date.now(), name, price, category });
-            }
+            if (eksis) { eksis.price = price; eksis.category = category; }
+            else { dbMenu.push({ id: Date.now(), name, price, category }); }
 
             localStorage.setItem('fbp_menu', JSON.stringify(dbMenu));
-            alert(`📋 Menu "${name}" berhasi disinkronisasikan ke pangkalan data kasir!`);
-
             document.getElementById('menuItemName').value = "";
             document.getElementById('menuItemPrice').value = "";
-
             renderSemuaHalaman();
         }
 
-        function hapusMenu(id) {
-            dbMenu = dbMenu.filter(m => m.id !== id);
-            localStorage.setItem('fbp_menu', JSON.stringify(dbMenu));
-            renderSemuaHalaman();
-        }
-
-        function hapusStok(id) {
-            dbStok = dbStok.filter(s => s.id !== id);
-            localStorage.setItem('fbp_stok', JSON.stringify(dbStok));
-            renderSemuaHalaman();
-        }
+        function hapusMenu(id) { dbMenu = dbMenu.filter(m => m.id !== id); localStorage.setItem('fbp_menu', JSON.stringify(dbMenu)); renderSemuaHalaman(); }
+        function hapusStok(id) { dbStok = dbStok.filter(s => s.id !== id); localStorage.setItem('fbp_stok', JSON.stringify(dbStok)); renderSemuaHalaman(); }
 
         // ================= RENDERING ENGINE =================
         function renderSemuaHalaman() {
             updateGlobalMenuListDatalist();
 
-            // 1. Render Log Penjualan Harian Kasir
+            // 1. Render Sales Log
             const salesLogBody = document.getElementById('salesLogTableBody');
             if (dbTransaksi.length === 0) {
-                salesLogBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-xs text-slate-400">Belum ada riwayat transaksi penjualan hari ini.</td></tr>`;
+                salesLogBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-xs text-slate-400">Belum ada riwayat transaksi.</td></tr>`;
             } else {
                 let htmlTrx = "";
                 dbTransaksi.forEach(t => {
                     let itemsStr = t.items.map(i => `${i.name} (${i.qty}x)`).join(', ');
-                    htmlTrx += `
-                        <tr class="border-b border-slate-100 hover:bg-slate-50">
-                            <td class="p-3 text-xs font-mono font-bold text-slate-600">${t.id}<br><span class="text-[10px] text-slate-400 font-normal">${t.timestamp}</span></td>
-                            <td class="p-3 text-xs font-medium">${t.date}</td>
-                            <td class="p-3 text-xs font-bold text-blue-700">${t.customer}</td>
-                            <td class="p-3 text-xs text-slate-600 truncate max-w-xs">${itemsStr}</td>
-                            <td class="p-3 text-xs font-black text-right text-emerald-600">${formatRupiah(t.total)}</td>
-                            <td class="p-3 text-center">
-                                <button onclick="cetakStrukNotaPdf('${t.id}')" class="bg-blue-50 hover:bg-blue-100 text-blue-700 text-[11px] font-bold px-2.5 py-1 rounded-lg transition">🖨️ Struk PDF</button>
-                            </td>
-                        </tr>
-                    `;
+                    htmlTrx += `<tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-3 text-xs font-mono font-bold text-slate-600">${t.id}</td><td class="p-3 text-xs font-medium">${t.date}</td><td class="p-3 text-xs font-bold text-blue-700">${t.customer}</td><td class="p-3 text-xs text-slate-600 truncate max-w-xs">${itemsStr}</td><td class="p-3 text-xs font-black text-right text-emerald-600">${formatRupiah(t.total)}</td><td class="p-3 text-center"><button onclick="cetakStrukNotaPdf('${t.id}')" class="bg-blue-50 hover:bg-blue-100 text-blue-700 text-[11px] font-bold px-2.5 py-1 rounded-lg">🖨️ Struk</button></td></tr>`;
                 });
                 salesLogBody.innerHTML = htmlTrx;
             }
 
-            // 2. Jurnal Keuangan Terintegrasi
-            let totalRevenue = 0;
-            let totalExpense = 0;
-            let gabunganArusKas = [];
-
-            dbTransaksi.forEach(t => {
-                totalRevenue += t.total;
-                gabunganArusKas.push({
-                    date: t.date,
-                    type: "MASUK (OMSET)",
-                    category: "Penjualan Kasir",
-                    note: `Pelanggan: ${t.customer}`,
-                    debit: t.total,
-                    credit: 0
-                });
-            });
-
-            dbPengeluaran.forEach(e => {
-                totalExpense += e.amount;
-                gabunganArusKas.push({
-                    date: e.date,
-                    type: "KELUAR (BIAYA)",
-                    category: e.category,
-                    note: e.note,
-                    debit: 0,
-                    credit: e.amount
-                });
-            });
-
+            // 2. Jurnal Arus Kas
+            let totalRevenue = 0; let totalExpense = 0; let gabunganArusKas = [];
+            dbTransaksi.forEach(t => { totalRevenue += t.total; gabunganArusKas.push({ date: t.date, type: "MASUK (OMSET)", category: "Penjualan Kasir", note: `Pelanggan: ${t.customer}`, debit: t.total, credit: 0 }); });
+            dbPengeluaran.forEach(e => { totalExpense += e.amount; gabunganArusKas.push({ date: e.date, type: "KELUAR (BIAYA)", category: e.category, note: e.note, debit: 0, credit: e.amount }); });
             gabunganArusKas.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             document.getElementById('finTotalRevenue').innerText = formatRupiah(totalRevenue);
@@ -739,33 +640,28 @@
 
             const ledgerBody = document.getElementById('ledgerTableBody');
             if (gabunganArusKas.length === 0) {
-                ledgerBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-xs text-slate-400">Belum ada aktivitas arus keuangan terekam.</td></tr>`;
+                ledgerBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-xs text-slate-400">Belum ada aktivitas kas.</td></tr>`;
             } else {
                 let htmlLedger = "";
                 gabunganArusKas.forEach(k => {
-                    htmlLedger += `
-                        <tr class="border-b border-slate-100 text-xs">
-                            <td class="p-3 font-medium">${k.date}</td>
-                            <td class="p-3 font-bold ${k.debit > 0 ? 'text-emerald-600' : 'text-rose-600'}">${k.type}</td>
-                            <td class="p-3 text-slate-700 font-medium">${k.category}</td>
-                            <td class="p-3 text-slate-500">${k.note}</td>
-                            <td class="p-3 text-right font-bold text-emerald-600">${k.debit > 0 ? formatRupiah(k.debit) : '-'}</td>
-                            <td class="p-3 text-right font-bold text-rose-600">${k.credit > 0 ? formatRupiah(k.credit) : '-'}</td>
-                        </tr>
-                    `;
+                    htmlLedger += `<tr class="border-b border-slate-100 text-xs"><td class="p-3 font-medium">${k.date}</td><td class="p-3 font-bold ${k.debit > 0 ? 'text-emerald-600' : 'text-rose-600'}">${k.type}</td><td class="p-3 text-slate-700 font-medium">${k.category}</td><td class="p-3 text-slate-500">${k.note}</td><td class="p-3 text-right font-bold text-emerald-600">${k.debit > 0 ? formatRupiah(k.debit) : '-'}</td><td class="p-3 text-right font-bold text-rose-600">${k.credit > 0 ? formatRupiah(k.credit) : '-'}</td></tr>`;
                 });
                 ledgerBody.innerHTML = htmlLedger;
             }
 
-            // 3. Render Inventori Stok Barang
+            // 3. Render Ketersediaan Stok (DENGAN KOLOM TANGGAL NYATA)
             const stockBody = document.getElementById('stockTableBody');
             let htmlStok = "";
             dbStok.forEach(s => {
-                let statusBadge = s.qty <= 5 ? `<span class="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded-full font-bold">⚠️ Stok Menipis</span>` : `<span class="bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded-full font-bold">✓ Aman</span>`;
+                let statusBadge = s.qty <= 5 ? `<span class="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded-full font-bold">⚠️ Menipis</span>` : `<span class="bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded-full font-bold">✓ Aman</span>`;
                 if(s.qty === 0) statusBadge = `<span class="bg-rose-100 text-rose-800 text-[10px] px-2 py-0.5 rounded-full font-bold">❌ Habis</span>`;
+                
+                // Nilai tanggal default jika data lama kosong
+                let tanggalTampil = s.date ? s.date : "-";
 
                 htmlStok += `
                     <tr class="border-b border-slate-100 hover:bg-slate-50 text-xs">
+                        <td class="p-3 font-mono text-slate-500">${tanggalTampil}</td>
                         <td class="p-3 font-bold text-slate-700">${s.name}</td>
                         <td class="p-3 font-extrabold text-center text-indigo-700 bg-indigo-50/40">${s.qty}</td>
                         <td class="p-3 text-slate-500">${s.unit}</td>
@@ -777,30 +673,22 @@
                     </tr>
                 `;
             });
-            stockBody.innerHTML = htmlStok || `<tr><td colspan="6" class="p-4 text-center text-xs text-slate-400">Gudang inventori kosong.</td></tr>`;
+            stockBody.innerHTML = htmlStok || `<tr><td colspan="7" class="p-4 text-center text-xs text-slate-400">Gudang inventori kosong.</td></tr>`;
 
-            // 4. Render Master Katalog Daftar Harga
+            // 4. Render Master Katalog Harga
             const priceBody = document.getElementById('priceListTableBody');
             let htmlMenu = "";
             dbMenu.forEach(m => {
-                htmlMenu += `
-                    <tr class="border-b border-slate-100 hover:bg-slate-50 text-xs">
-                        <td class="p-3 font-bold text-slate-700 flex items-center gap-1.5">🍔 ${m.name}</td>
-                        <td class="p-3 text-slate-500"><span class="bg-slate-100 px-2 py-0.5 rounded-md">${m.category}</span></td>
-                        <td class="p-3 text-right font-black text-blue-700">${formatRupiah(m.price)}</td>
-                        <td class="p-3 text-center">
-                            <button onclick="hapusMenu(${m.id})" class="text-rose-400 hover:text-rose-600 font-bold">✕</button>
-                        </td>
-                    </tr>
-                `;
+                htmlMenu += `<tr class="border-b border-slate-100 hover:bg-slate-50 text-xs"><td class="p-3 font-bold text-slate-700">🍔 ${m.name}</td><td class="p-3 text-slate-500"><span class="bg-slate-100 px-2 py-0.5 rounded-md">${m.category}</span></td><td class="p-3 text-right font-black text-blue-700">${formatRupiah(m.price)}</td><td class="p-3 text-center"><button onclick="hapusMenu(${m.id})" class="text-rose-400 hover:text-rose-600 font-bold">✕</button></td></tr>`;
             });
-            priceBody.innerHTML = htmlMenu || `<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">Belum ada menu produk kuliner terdaftar.</td></tr>`;
+            priceBody.innerHTML = htmlMenu || `<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">Belum ada produk terdaftar.</td></tr>`;
         }
 
         document.addEventListener("DOMContentLoaded", function() {
             const hariIni = new Date().toISOString().split('T')[0];
             document.getElementById('orderDate').value = hariIni;
             document.getElementById('expDate').value = hariIni;
+            document.getElementById('stockDate').value = hariIni; // Set default date input stok harian otomatis
 
             setInterval(() => {
                 document.getElementById('liveClock').innerText = "Kasir Aktif: " + new Date().toLocaleTimeString('id-ID') + " WIB";
