@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FoodBiz Pro - Sistem Manajemen Kuliner Terpadu</title>
+    <title>FoodBiz Pro V2 - Sistem Manajemen Kuliner Terpadu</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,8 +25,8 @@
             <div class="flex items-center gap-3">
                 <span class="text-3xl">🏪</span>
                 <div>
-                    <h1 class="text-xl font-bold tracking-wide">FoodBiz Pro</h1>
-                    <p class="text-xs text-indigo-200">Sistem Kasir, Keuangan, Stok & Daftar Harga Terintegrasi</p>
+                    <h1 class="text-xl font-bold tracking-wide">FoodBiz Pro V2</h1>
+                    <p class="text-xs text-indigo-200">Sistem Kasir Terintegrasi, Manajemen Stok & Multi-Metode Pembayaran</p>
                 </div>
             </div>
             <nav class="flex flex-wrap gap-2">
@@ -56,14 +56,22 @@
                         <span class="text-xs font-semibold bg-blue-50 text-blue-700 px-3 py-1 rounded-full" id="liveClock"></span>
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Transaksi</label>
                             <input type="date" id="orderDate" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium focus:outline-blue-500">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Nama / Nomor Meja Pelanggan</label>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Nama / Nomor Meja</label>
                             <input type="text" id="customerName" placeholder="Contoh: Meja 05 / Andi" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium focus:outline-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Metode Pembayaran</label>
+                            <select id="paymentMethod" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium focus:outline-blue-500">
+                                <option value="Cash">💵 Cash / Tunai</option>
+                                <option value="QRIS">📱 QRIS / Digital</option>
+                                <option value="Transfer">🏦 Bank Transfer</option>
+                            </select>
                         </div>
                     </div>
 
@@ -71,15 +79,14 @@
                         <table class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="border-b border-slate-100 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                                    <th class="py-2 pl-1 w-2/5">Nama Item / Menu (Bisa Ketik Manual)</th>
+                                    <th class="py-2 pl-1 w-2/5">Nama Item / Menu</th>
                                     <th class="py-2 w-1/5 text-center">Jumlah (Qty)</th>
                                     <th class="py-2 w-1/5">Harga Satuan</th>
                                     <th class="py-2 w-1/5">Subtotal</th>
                                     <th class="py-2 text-center w-10"></th>
                                 </tr>
                             </thead>
-                            <tbody id="orderItemsBody">
-                                </tbody>
+                            <tbody id="orderItemsBody"></tbody>
                         </table>
                     </div>
 
@@ -106,10 +113,20 @@
                             <span class="text-xs text-slate-400 block">GRAND TOTAL</span>
                             <h1 class="text-3xl font-black text-amber-400" id="cartGrandTotal">Rp 0</h1>
                         </div>
+                        <div class="border-t border-slate-800 pt-3 space-y-2">
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Uang Tunai Diterima (Rp)</label>
+                                <input type="number" id="cashReceived" oninput="hitungKembalian()" placeholder="0" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm font-bold text-amber-400 focus:outline-amber-500">
+                            </div>
+                            <div class="flex justify-between items-center pt-1">
+                                <span class="text-xs text-slate-300">Uang Kembalian:</span>
+                                <span class="text-sm font-bold text-emerald-400" id="cashReturn">Rp 0</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700/50 mt-6 text-xs text-slate-300 space-y-1">
-                        <p class="font-bold text-amber-400">💡 Informasi Terintegrasi:</p>
-                        <p>Penjualan menu yang namanya cocok dengan **Stok Barang** otomatis akan mengurangi kuantitas di gudang inventori secara *real-time*.</p>
+                        <p class="font-bold text-amber-400">💡 Sistem Validasi Stok:</p>
+                        <p>Aplikasi sekarang otomatis mengecek ketersediaan gudang dan mencegah penjualan produk yang melampaui jumlah stok riil.</p>
                     </div>
                 </div>
             </div>
@@ -125,18 +142,19 @@
                                 <th class="p-3">ID / Waktu</th>
                                 <th class="p-3">Tanggal</th>
                                 <th class="p-3">Pelanggan</th>
+                                <th class="p-3">Metode</th>
                                 <th class="p-3">Detail Menu Order</th>
                                 <th class="p-3 text-right">Total Transaksi</th>
                                 <th class="p-3 text-center">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="salesLogTableBody">
-                            </tbody>
+                        <tbody id="salesLogTableBody"></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
+        <!-- TAB LAPORAN KEUANGAN -->
         <div id="tab-laporan" class="tab-content hidden space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-emerald-100 flex items-center gap-4">
@@ -222,8 +240,7 @@
                                         <th class="p-3 text-center w-10">Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody id="ledgerTableBody">
-                                    </tbody>
+                                <tbody id="ledgerTableBody"></tbody>
                             </table>
                         </div>
                     </div>
@@ -231,6 +248,7 @@
             </div>
         </div>
 
+        <!-- TAB STOK -->
         <div id="tab-stok" class="tab-content hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
@@ -294,14 +312,14 @@
                                     <th class="p-3 text-center w-12">Hapus</th>
                                 </tr>
                             </thead>
-                            <tbody id="stockTableBody">
-                                </tbody>
+                            <tbody id="stockTableBody"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- TAB DAFTAR HARGA -->
         <div id="tab-harga" class="tab-content hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
@@ -344,8 +362,7 @@
                                     <th class="p-3 text-center w-12">Hapus</th>
                                 </tr>
                             </thead>
-                            <tbody id="priceListTableBody">
-                                </tbody>
+                            <tbody id="priceListTableBody"></tbody>
                         </table>
                     </div>
                 </div>
@@ -354,6 +371,7 @@
 
     </main>
 
+    <!-- AREA STRUK NOTA UNTUK DICETAK -->
     <div id="printReceiptArea" class="hidden p-6 bg-white text-black font-mono text-sm max-w-sm mx-auto">
         <div class="text-center space-y-1">
             <h2 class="text-xl font-bold uppercase" id="receiptBizName">FOODBIZ PRO OUTLET</h2>
@@ -364,6 +382,7 @@
         <div class="text-xs space-y-1">
             <p><b>Tanggal:</b> <span id="receiptDate">-</span></p>
             <p><b>Pelanggan:</b> <span id="receiptCustomer">-</span></p>
+            <p><b>Metode:</b> <span id="receiptPayment">-</span></p>
         </div>
         <div class="border-b border-dashed border-black my-3"></div>
         <table class="w-full text-xs">
@@ -382,12 +401,19 @@
             <span>GRAND TOTAL:</span>
             <span id="receiptGrandTotal">Rp 0</span>
         </div>
+        <div class="flex justify-between text-xs mt-1">
+            <span>DIBAYAR:</span>
+            <span id="receiptPaid">Rp 0</span>
+        </div>
+        <div class="flex justify-between text-xs font-bold text-slate-700">
+            <span>KEMBALIAN:</span>
+            <span id="receiptReturn">Rp 0</span>
+        </div>
         <div class="border-b border-dashed border-black my-3"></div>
         <div class="text-center text-[10px] space-y-1 mt-4">
             <p>Terima Kasih Atas Kunjungan & Order Anda!</p>
         </div>
     </div>
-
 
     <script>
         let dbMenu = JSON.parse(localStorage.getItem('fbp_menu')) || [
@@ -402,6 +428,7 @@
 
         let dbTransaksi = JSON.parse(localStorage.getItem('fbp_transaksi')) || [];
         let dbPengeluaran = JSON.parse(localStorage.getItem('fbp_pengeluaran')) || [];
+        let currentGrandTotalGlobal = 0;
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
@@ -458,7 +485,9 @@
             const val = inputEl.value;
             const cocokMenu = dbMenu.find(m => m.name.toLowerCase() === val.toLowerCase());
             const tr = inputEl.closest('tr');
-            if (cocokMenu) tr.querySelector('.item-price').value = cocokMenu.price;
+            if (cocokMenu) {
+                tr.querySelector('.item-price').value = cocokMenu.price;
+            }
             hitungUlangKeranjang();
         }
 
@@ -472,19 +501,56 @@
                 totalItems += qty; grandTotal += subtotal;
                 row.querySelector('.item-subtotal').innerText = formatRupiah(subtotal);
             });
+            currentGrandTotalGlobal = grandTotal;
             document.getElementById('cartTotalItems').innerText = totalItems + " item";
             document.getElementById('cartGrandTotal').innerText = formatRupiah(grandTotal);
+            hitungKembalian();
+        }
+
+        function hitungKembalian() {
+            const cashReceived = parseFloat(document.getElementById('cashReceived').value) || 0;
+            const returnAmount = cashReceived - currentGrandTotalGlobal;
+            if (returnAmount >= 0 && currentGrandTotalGlobal > 0) {
+                document.getElementById('cashReturn').innerText = formatRupiah(returnAmount);
+            } else {
+                document.getElementById('cashReturn').innerText = "Rp 0";
+            }
         }
 
         function simpanTransaksiSelesai() {
             const date = document.getElementById('orderDate').value;
             const customer = document.getElementById('customerName').value || "Pelanggan Umum";
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            const cashReceived = parseFloat(document.getElementById('cashReceived').value) || 0;
             const rows = document.querySelectorAll('.row-order-item');
 
             if (!date) { alert("Harap isi Tanggal Transaksi!"); return; }
             if (rows.length === 0) { alert("Tambahkan minimal 1 item!"); return; }
+            if (paymentMethod === "Cash" && cashReceived > 0 && cashReceived < currentGrandTotalGlobal) {
+                alert("Uang tunai yang diterima kurang dari total tagihan!");
+                return;
+            }
 
             let itemsOrdered = []; let totalTransaksi = 0;
+            let validasiStokAman = true;
+
+            // Loop 1: Validasi Ketersediaan Stok Terlebih Dahulu
+            rows.forEach(row => {
+                const name = row.querySelector('.item-name-input').value.trim();
+                const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
+                
+                if (name && qty > 0) {
+                    let stokCocok = dbStok.find(s => s.name.toLowerCase() === name.toLowerCase());
+                    if (stokCocok && stokCocok.qty < qty) {
+                        alert(`❌ Gagal! Stok untuk "${stokCocok.name}" tidak mencukupi. Tersisa: ${stokCocok.qty}`);
+                        validasiStokAman = false;
+                    }
+                }
+            });
+
+            if(!validasiStokAman) return; // Batalkan proses simpan jika stok tidak cukup
+
+            // Loop 2: Eksekusi Pengurangan Stok & Pembuatan Item Array
             rows.forEach(row => {
                 const name = row.querySelector('.item-name-input').value;
                 const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
@@ -499,13 +565,27 @@
                 }
             });
 
-            const trx = { id: "TRX-" + Date.now(), timestamp: new Date().toLocaleTimeString('id-ID'), date, customer, items: itemsOrdered, total: totalTransaksi };
+            const returnAmount = cashReceived > totalTransaksi ? (cashReceived - totalTransaksi) : 0;
+
+            const trx = { 
+                id: "TRX-" + Date.now(), 
+                timestamp: new Date().toLocaleTimeString('id-ID'), 
+                date, 
+                customer, 
+                paymentMethod,
+                cashReceived: cashReceived || totalTransaksi,
+                cashReturn: returnAmount,
+                items: itemsOrdered, 
+                total: totalTransaksi 
+            };
+            
             dbTransaksi.unshift(trx);
             localStorage.setItem('fbp_transaksi', JSON.stringify(dbTransaksi));
             localStorage.setItem('fbp_stok', JSON.stringify(dbStok));
 
             alert("✅ Transaksi Berhasil Disimpan!");
             document.getElementById('customerName').value = "";
+            document.getElementById('cashReceived').value = "";
             document.getElementById('orderItemsBody').innerHTML = "";
             addOrderItemRow();
             renderSemuaHalaman();
@@ -515,7 +595,6 @@
             if (confirm("Apakah Anda yakin ingin membatalkan transaksi (Void) ini? Stok terpotong akan dikembalikan.")) {
                 const trx = dbTransaksi.find(t => t.id === id);
                 if (trx) {
-                    // Kembalikan stok
                     trx.items.forEach(item => {
                         let stokCocok = dbStok.find(s => s.name.toLowerCase() === item.name.toLowerCase());
                         if (stokCocok) stokCocok.qty += item.qty;
@@ -533,8 +612,12 @@
             if (!trx) return;
             document.getElementById('receiptDate').innerText = trx.date;
             document.getElementById('receiptCustomer').innerText = trx.customer;
+            document.getElementById('receiptPayment').innerText = trx.paymentMethod || "Cash";
             document.getElementById('receiptTime').innerText = "Waktu: " + trx.timestamp;
             document.getElementById('receiptGrandTotal').innerText = formatRupiah(trx.total);
+            document.getElementById('receiptPaid').innerText = formatRupiah(trx.cashReceived);
+            document.getElementById('receiptReturn').innerText = formatRupiah(trx.cashReturn || 0);
+            
             let htmlItems = "";
             trx.items.forEach(item => {
                 htmlItems += `<tr class="border-b border-black"><td class="py-1">${item.name}</td><td class="py-1 text-center">${item.qty}</td><td class="py-1 text-right">${formatRupiah(item.price)}</td><td class="py-1 text-right">${formatRupiah(item.subtotal)}</td></tr>`;
@@ -614,9 +697,9 @@
             if (eksis) {
                 eksis.date = date;
                 if (method === 'add') {
-                    eksis.qty += qty; // Menambahkan ke stok yang sudah ada
+                    eksis.qty += qty;
                 } else {
-                    eksis.qty = qty;  // Menimpa nilai stok lama (Opname)
+                    eksis.qty = qty;
                 }
                 if(price > 0) eksis.price = price;
                 if(unit !== "Unit") eksis.unit = unit;
@@ -662,19 +745,23 @@
             // 1. Render Sales Log
             const salesLogBody = document.getElementById('salesLogTableBody');
             if (dbTransaksi.length === 0) {
-                salesLogBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-xs text-slate-400">Belum ada riwayat transaksi.</td></tr>`;
+                salesLogBody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-xs text-slate-400">Belum ada riwayat transaksi.</td></tr>`;
             } else {
                 let htmlTrx = "";
                 dbTransaksi.forEach(t => {
                     let itemsStr = t.items.map(i => `${i.name} (${i.qty}x)`).join(', ');
-                    htmlTrx += `<tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-3 text-xs font-mono font-bold text-slate-600">${t.id}</td><td class="p-3 text-xs font-medium">${t.date}</td><td class="p-3 text-xs font-bold text-blue-700">${t.customer}</td><td class="p-3 text-xs text-slate-600 truncate max-w-xs">${itemsStr}</td><td class="p-3 text-xs font-black text-right text-emerald-600">${formatRupiah(t.total)}</td><td class="p-3 text-center flex justify-center gap-1"><button onclick="cetakStrukNotaPdf('${t.id}')" class="bg-blue-50 hover:bg-blue-100 text-blue-700 text-[11px] font-bold px-2 py-1 rounded-lg">🖨️ Struk</button><button onclick="hapusTransaksi('${t.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-700 text-[11px] font-bold px-2 py-1 rounded-lg">✕ Void</button></td></tr>`;
+                    let badgeMethod = `<span class="bg-slate-100 text-slate-700 font-bold px-2 py-0.5 rounded text-[10px]">${t.paymentMethod || 'Cash'}</span>`;
+                    if(t.paymentMethod === 'QRIS') badgeMethod = `<span class="bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded text-[10px]">📱 QRIS</span>`;
+                    if(t.paymentMethod === 'Transfer') badgeMethod = `<span class="bg-purple-100 text-purple-700 font-bold px-2 py-0.5 rounded text-[10px]">🏦 TRF</span>`;
+
+                    htmlTrx += `<tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-3 text-xs font-mono font-bold text-slate-600">${t.id}</td><td class="p-3 text-xs font-medium">${t.date}</td><td class="p-3 text-xs font-bold text-blue-700">${t.customer}</td><td class="p-3 text-xs">${badgeMethod}</td><td class="p-3 text-xs text-slate-600 truncate max-w-xs">${itemsStr}</td><td class="p-3 text-xs font-black text-right text-emerald-600">${formatRupiah(t.total)}</td><td class="p-3 text-center flex justify-center gap-1"><button onclick="cetakStrukNotaPdf('${t.id}')" class="bg-blue-50 hover:bg-blue-100 text-blue-700 text-[11px] font-bold px-2 py-1 rounded-lg">🖨️ Struk</button><button onclick="hapusTransaksi('${t.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-700 text-[11px] font-bold px-2 py-1 rounded-lg">✕ Void</button></td></tr>`;
                 });
                 salesLogBody.innerHTML = htmlTrx;
             }
 
             // 2. Jurnal Arus Kas
             let totalRevenue = 0; let totalExpense = 0; let gabunganArusKas = [];
-            dbTransaksi.forEach(t => { totalRevenue += t.total; gabunganArusKas.push({ id: t.id, date: t.date, type: "MASUK (OMSET)", category: "Penjualan Kasir", note: `Pelanggan: ${t.customer}`, debit: t.total, credit: 0, isTrx: true }); });
+            dbTransaksi.forEach(t => { totalRevenue += t.total; gabunganArusKas.push({ id: t.id, date: t.date, type: "MASUK (OMSET)", category: `Penjualan [${t.paymentMethod || 'Cash'}]`, note: `Pelanggan: ${t.customer}`, debit: t.total, credit: 0, isTrx: true }); });
             dbPengeluaran.forEach(e => { totalExpense += e.amount; gabunganArusKas.push({ id: e.id, date: e.date, type: "KELUAR (BIAYA)", category: e.category, note: e.note, debit: 0, credit: e.amount, isTrx: false }); });
             gabunganArusKas.sort((a, b) => new Date(b.date) - new Date(a.date));
 
