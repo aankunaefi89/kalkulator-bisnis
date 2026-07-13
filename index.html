@@ -10,432 +10,434 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* FIX TOTAL STRUK KOSONG: CSS Khusus Layar vs Cetak Printer */
         @media print {
-            body * { visibility: hidden; }
-            #printReceiptArea, #printReceiptArea * { visibility: visible; }
-            #printReceiptArea { position: absolute; left: 0; top: 0; width: 100%; }
-            .no-print { display: none !important; }
+            /* Sembunyikan semua elemen aplikasi utama */
+            body *, .no-print { 
+                visibility: hidden; 
+                display: none !important; 
+            }
+            /* Tampilkan area cetak struk secara eksklusif */
+            #printReceiptArea, #printReceiptArea * { 
+                visibility: visible; 
+                display: block !important; 
+            }
+            #printReceiptArea { 
+                position: absolute; 
+                left: 0; 
+                top: 0; 
+                width: 100%; 
+                max-width: 80mm; /* Standar printer thermal kasir */
+                font-family: 'Courier New', Courier, monospace; 
+                color: #000;
+                background: #fff;
+                padding: 10px;
+            }
+            #printReceiptArea table {
+                width: 100%;
+            }
+            #printReceiptArea th, #printReceiptArea td {
+                display: table-cell !important;
+            }
         }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen pb-12">
 
-    <header class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white shadow-md sticky top-0 z-50 no-print">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <span class="text-3xl">🏪</span>
-                <div>
-                    <h1 class="text-xl font-bold tracking-wide">FoodBiz Pro V2</h1>
-                    <p class="text-xs text-indigo-200">Sistem Kasir Terintegrasi, Manajemen Stok & Multi-Metode Pembayaran</p>
+    <div class="no-print">
+        <header class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white shadow-md sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl">🏪</span>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-wide">FoodBiz Pro V2</h1>
+                        <p class="text-xs text-indigo-200">Sistem Kasir Terintegrasi, Manajemen Stok & Multi-Metode Pembayaran</p>
+                    </div>
                 </div>
+                <nav class="flex flex-wrap gap-2">
+                    <button onclick="switchTab('tab-penjualan')" id="btn-tab-penjualan" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold transition bg-white text-blue-700 shadow-sm">
+                        🛍️ Penjualan Harian
+                    </button>
+                    <button onclick="switchTab('tab-laporan')" id="btn-tab-laporan" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold transition hover:bg-white/10 text-white">
+                        📊 Laporan Keuangan
+                    </button>
+                    <button onclick="switchTab('tab-stok')" id="btn-tab-stok" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold transition hover:bg-white/10 text-white">
+                        📦 Stok Barang
+                    </button>
+                    <button onclick="switchTab('tab-harga')" id="btn-tab-harga" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold transition hover:bg-white/10 text-white">
+                        📋 Daftar Harga Menu
+                    </button>
+                </nav>
             </div>
-            <nav class="flex flex-wrap gap-2">
-                <button onclick="switchTab('tab-penjualan')" id="btn-tab-penjualan" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold transition bg-white text-blue-700 shadow-sm">
-                    🛍️ Penjualan Harian
-                </button>
-                <button onclick="switchTab('tab-laporan')" id="btn-tab-laporan" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold transition hover:bg-white/10 text-white">
-                    📊 Laporan Keuangan
-                </button>
-                <button onclick="switchTab('tab-stok')" id="btn-tab-stok" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold transition hover:bg-white/10 text-white">
-                    📦 Stok Barang
-                </button>
-                <button onclick="switchTab('tab-harga')" id="btn-tab-harga" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold transition hover:bg-white/10 text-white">
-                    📋 Daftar Harga Menu
-                </button>
-            </nav>
-        </div>
-    </header>
+        </header>
 
-    <main class="max-w-7xl mx-auto px-4 mt-8 no-print">
-        
-        <div id="tab-penjualan" class="tab-content space-y-6">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
-                    <div class="flex justify-between items-center border-b pb-3">
-                        <h2 class="text-lg font-bold text-slate-700 flex items-center gap-2"><span>🛒</span> Input Order Pelanggan Baru</h2>
-                        <span class="text-xs font-semibold bg-blue-50 text-blue-700 px-3 py-1 rounded-full" id="liveClock"></span>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Transaksi</label>
-                            <input type="date" id="orderDate" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium focus:outline-blue-500">
+        <main class="max-w-7xl mx-auto px-4 mt-8">
+            
+            <div id="tab-penjualan" class="tab-content space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+                        <div class="flex justify-between items-center border-b pb-3">
+                            <h2 class="text-lg font-bold text-slate-700 flex items-center gap-2"><span>🛒</span> Input Order Pelanggan Baru</h2>
+                            <span class="text-xs font-semibold bg-blue-50 text-blue-700 px-3 py-1 rounded-full" id="liveClock"></span>
                         </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Nama / Nomor Meja</label>
-                            <input type="text" id="customerName" placeholder="Contoh: Meja 05 / Andi" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium focus:outline-blue-500">
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Transaksi</label>
+                                <input type="date" id="orderDate" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium focus:outline-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Nama / Nomor Meja</label>
+                                <input type="text" id="customerName" placeholder="Contoh: Meja 05 / Andi" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium focus:outline-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Metode Pembayaran</label>
+                                <select id="paymentMethod" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium focus:outline-blue-500">
+                                    <option value="Cash">💵 Cash / Tunai</option>
+                                    <option value="QRIS">📱 QRIS / Digital</option>
+                                    <option value="Transfer">🏦 Bank Transfer</option>
+                                </select>
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Metode Pembayaran</label>
-                            <select id="paymentMethod" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium focus:outline-blue-500">
-                                <option value="Cash">💵 Cash / Tunai</option>
-                                <option value="QRIS">📱 QRIS / Digital</option>
-                                <option value="Transfer">🏦 Bank Transfer</option>
-                            </select>
+
+                        <div class="overflow-x-auto pt-2">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-slate-100 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                                        <th class="py-2 pl-1 w-2/5">Nama Item / Menu</th>
+                                        <th class="py-2 w-1/5 text-center">Jumlah (Qty)</th>
+                                        <th class="py-2 w-1/5">Harga Satuan</th>
+                                        <th class="py-2 w-1/5">Subtotal</th>
+                                        <th class="py-2 text-center w-10"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orderItemsBody"></tbody>
+                            </table>
+                        </div>
+
+                        <datalist id="globalMenuList"></datalist>
+
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <button type="button" onclick="addOrderItemRow()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2 px-4 rounded-xl transition flex items-center gap-1">
+                                ➕ Tambah Baris Menu
+                            </button>
+                            <button type="button" onclick="simpanTransaksiSelesai()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 px-5 rounded-xl transition ml-auto flex items-center gap-1 shadow-sm">
+                                💾 Simpan Transaksi & Cetak Struk
+                            </button>
                         </div>
                     </div>
 
-                    <div class="overflow-x-auto pt-2">
-                        <table class="w-full text-left border-collapse">
+                    <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-lg flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <h3 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Ringkasan Pembayaran</h3>
+                            <div class="border-t border-slate-800 pt-3 flex justify-between items-center">
+                                <span class="text-sm text-slate-300">Total Item:</span>
+                                <span class="font-bold text-slate-100" id="cartTotalItems">0 item</span>
+                            </div>
+                            <div class="border-t border-slate-800 pt-3">
+                                <span class="text-xs text-slate-400 block">GRAND TOTAL</span>
+                                <h1 class="text-3xl font-black text-amber-400" id="cartGrandTotal">Rp 0</h1>
+                            </div>
+                            <div class="border-t border-slate-800 pt-3 space-y-2">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Uang Tunai Diterima (Rp)</label>
+                                    <input type="number" id="cashReceived" oninput="hitungKembalian()" placeholder="0" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm font-bold text-amber-400 focus:outline-amber-500">
+                                </div>
+                                <div class="flex justify-between items-center pt-1">
+                                    <span class="text-xs text-slate-300">Uang Kembalian:</span>
+                                    <span class="text-sm font-bold text-emerald-400" id="cashReturn">Rp 0</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700/50 mt-6 text-xs text-slate-300 space-y-1">
+                            <p class="font-bold text-amber-400">💡 Sistem Validasi Stok Potong Otomatis:</p>
+                            <p>Aplikasi otomatis mendeteksi ketersediaan stok gudang berdasarkan keterikatan resep bahan baku saat kasir memproses transaksi.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <span>📜</span> Log Riwayat Penjualan Harian Tersimpan
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
                             <thead>
-                                <tr class="border-b border-slate-100 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                                    <th class="py-2 pl-1 w-2/5">Nama Item / Menu</th>
-                                    <th class="py-2 w-1/5 text-center">Jumlah (Qty)</th>
-                                    <th class="py-2 w-1/5">Harga Satuan</th>
-                                    <th class="py-2 w-1/5">Subtotal</th>
-                                    <th class="py-2 text-center w-10"></th>
+                                <tr class="bg-slate-50 border-b border-slate-100 text-xs font-bold text-slate-500 uppercase">
+                                    <th class="p-3">ID / Waktu</th>
+                                    <th class="p-3">Tanggal</th>
+                                    <th class="p-3">Pelanggan</th>
+                                    <th class="p-3">Metode</th>
+                                    <th class="p-3">Detail Menu Order</th>
+                                    <th class="p-3 text-right">Total Transaksi</th>
+                                    <th class="p-3 text-center">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody id="orderItemsBody"></tbody>
+                            <tbody id="salesLogTableBody"></tbody>
                         </table>
                     </div>
+                </div>
+            </div>
 
-                    <datalist id="globalMenuList"></datalist>
-
-                    <div class="flex flex-wrap gap-2 pt-2">
-                        <button type="button" onclick="addOrderItemRow()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2 px-4 rounded-xl transition flex items-center gap-1">
-                            ➕ Tambah Baris Menu
-                        </button>
-                        <button type="button" onclick="simpanTransaksiSelesai()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 px-5 rounded-xl transition ml-auto flex items-center gap-1 shadow-sm">
-                            💾 Simpan Transaksi & Cetak Struk
-                        </button>
+            <div id="tab-laporan" class="tab-content hidden space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-emerald-100 flex items-center gap-4">
+                        <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl text-2xl">💰</div>
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Total Pendapatan (Sales)</span>
+                            <h2 class="text-xl font-black text-emerald-600" id="finTotalRevenue">Rp 0</h2>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100 flex items-center gap-4">
+                        <div class="p-3 bg-rose-50 text-rose-600 rounded-xl text-2xl">🛒</div>
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Total Beban Pokok (HPP + Biaya)</span>
+                            <h2 class="text-xl font-black text-rose-600" id="finTotalExpense">Rp 0</h2>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900 p-5 rounded-2xl shadow-lg flex items-center gap-4 text-white">
+                        <div class="p-3 bg-slate-800 text-amber-400 rounded-xl text-2xl">⚖️</div>
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Estimasi Laba Bersih (Net Profit)</span>
+                            <h2 class="text-xl font-black text-amber-400" id="finNetProfit">Rp 0</h2>
+                        </div>
                     </div>
                 </div>
 
-                <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-lg flex flex-col justify-between">
-                    <div class="space-y-4">
-                        <h3 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Ringkasan Pembayaran</h3>
-                        <div class="border-t border-slate-800 pt-3 flex justify-between items-center">
-                            <span class="text-sm text-slate-300">Total Item:</span>
-                            <span class="font-bold text-slate-100" id="cartTotalItems">0 item</span>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+                        <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider border-b pb-2 flex items-center gap-1.5">
+                            <span>💸</span> Catat Pengeluaran Operasional Baru
+                        </h3>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal</label>
+                            <input type="date" id="expDate" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500">
                         </div>
-                        <div class="border-t border-slate-800 pt-3">
-                            <span class="text-xs text-slate-400 block">GRAND TOTAL</span>
-                            <h1 class="text-3xl font-black text-amber-400" id="cartGrandTotal">Rp 0</h1>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori Pengeluaran</label>
+                            <select id="expCategory" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 font-medium">
+                                <option value="Belanja Bahan Baku">Belanja Bahan Baku / Sembako</option>
+                                <option value="Operasional Harian">Operasional (Gas/Mika/Es/Sabun)</option>
+                                <option value="Gaji Karyawan">Gaji Karyawan / Staff</option>
+                                <option value="Sewa Tempat & Listrik">Sewa Tempat & Listrik</option>
+                                <option value="Lain-lain">Biaya Tak Terduga / Lain-lain</option>
+                            </select>
                         </div>
-                        <div class="border-t border-slate-800 pt-3 space-y-2">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Nominal Biaya (Rp)</label>
+                            <input type="number" id="expAmount" placeholder="Contoh: 150000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Keterangan Tambahan</label>
+                            <input type="text" id="expNote" placeholder="Contoh: Beli daging ayam 5kg" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500">
+                        </div>
+                        <button type="button" onclick="simpanPengeluaran()" class="w-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition shadow-sm">
+                            ➕ Catat Biaya Pengeluaran
+                        </button>
+                    </div>
+
+                    <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between space-y-6">
+                        <div>
+                            <div class="flex flex-wrap justify-between items-center gap-2 mb-4">
+                                <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+                                    <span>📖</span> Jurnal Arus Kas Keuangan Terintegrasi
+                                </h3>
+                                <div class="flex gap-2">
+                                    <button onclick="eksporLaporanKeuanganKeCSV()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-xl border border-emerald-200 transition">
+                                        📥 Ekspor CSV
+                                    </button>
+                                    <button onclick="clearSemuaDataKeuangan()" class="text-rose-500 hover:text-rose-700 text-xs font-semibold border border-rose-100 px-2 py-1.5 rounded-xl hover:bg-rose-50 transition">
+                                        Reset Log
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-sm">
+                                    <thead>
+                                        <tr class="bg-slate-50 border-b border-slate-100 text-xs font-bold text-slate-500 uppercase">
+                                            <th class="p-3">Tanggal</th>
+                                            <th class="p-3">Tipe</th>
+                                            <th class="p-3">Kategori / Sumber</th>
+                                            <th class="p-3">Keterangan</th>
+                                            <th class="p-3 text-right">Debit (Masuk)</th>
+                                            <th class="p-3 text-right">Kredit (Keluar)</th>
+                                            <th class="p-3 text-center w-10">Aksi</th>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/60 space-y-3">
+                            <h4 class="text-xs font-bold uppercase text-slate-600 tracking-wide flex items-center gap-1">
+                                <span>🛡️</span> Manajemen Sistem Cadangan Data (Anti-Hilang)
+                            </h4>
+                            <p class="text-xs text-slate-500">Gunakan menu ini untuk mengamankan data transaksi Anda secara berkala, atau memindahkan seluruh data ke perangkat HP/Laptop lain dengan mudah.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="eksporSemuaDataKeJSON()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow-sm">
+                                    📤 Unduh File Cadangan (.json)
+                                </button>
+                                <label class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow-sm cursor-pointer flex items-center">
+                                    📥 Pulihkan Data dari File
+                                    <input type="file" id="importFileJson" onchange="imporSemuaDataDariJSON(this)" accept=".json" class="hidden">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-stok" class="tab-content hidden space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+                        <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider border-b pb-2 flex items-center gap-1.5">
+                            <span>📦</span> Manajemen & Input Stok Gudang
+                        </h3>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Pencatatan / Opname</label>
+                            <input type="date" id="stockDate" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Metode Input Kuantitas</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="flex items-center gap-2 p-2 bg-slate-50 rounded-xl border border-slate-200 text-xs cursor-pointer">
+                                    <input type="radio" name="stockMethod" value="add" checked class="text-indigo-600 focus:ring-indigo-500">
+                                    <span>➕ Tambah Stok</span>
+                                </label>
+                                <label class="flex items-center gap-2 p-2 bg-slate-50 rounded-xl border border-slate-200 text-xs cursor-pointer">
+                                    <input type="radio" name="stockMethod" value="set" class="text-indigo-600 focus:ring-indigo-500">
+                                    <span>🔄 Opname Baru</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Barang / Bahan Baku</label>
+                            <input type="text" id="stockName" placeholder="Contoh: Daging Ayam / Mika Box" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 font-medium">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Uang Tunai Diterima (Rp)</label>
-                                <input type="number" id="cashReceived" oninput="hitungKembalian()" placeholder="0" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm font-bold text-amber-400 focus:outline-amber-500">
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Jumlah</label>
+                                <input type="number" id="stockQty" placeholder="10" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 font-semibold">
                             </div>
-                            <div class="flex justify-between items-center pt-1">
-                                <span class="text-xs text-slate-300">Uang Kembalian:</span>
-                                <span class="text-sm font-bold text-emerald-400" id="cashReturn">Rp 0</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700/50 mt-6 text-xs text-slate-300 space-y-1">
-                        <p class="font-bold text-amber-400">💡 Sistem Validasi Stok:</p>
-                        <p>Aplikasi otomatis mendeteksi ketersediaan stok gudang serta memproses item non-stok dengan aman.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <span>📜</span> Log Riwayat Penjualan Harian Tersimpan
-                </h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm">
-                        <thead>
-                            <tr class="bg-slate-50 border-b border-slate-100 text-xs font-bold text-slate-500 uppercase">
-                                <th class="p-3">ID / Waktu</th>
-                                <th class="p-3">Tanggal</th>
-                                <th class="p-3">Pelanggan</th>
-                                <th class="p-3">Metode</th>
-                                <th class="p-3">Detail Menu Order</th>
-                                <th class="p-3 text-right">Total Transaksi</th>
-                                <th class="p-3 text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="salesLogTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div id="tab-laporan" class="tab-content hidden space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-emerald-100 flex items-center gap-4">
-                    <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl text-2xl">💰</div>
-                    <div>
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Total Pendapatan (Sales)</span>
-                        <h2 class="text-xl font-black text-emerald-600" id="finTotalRevenue">Rp 0</h2>
-                    </div>
-                </div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100 flex items-center gap-4">
-                    <div class="p-3 bg-rose-50 text-rose-600 rounded-xl text-2xl">🛒</div>
-                    <div>
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Total Pengeluaran (Biaya)</span>
-                        <h2 class="text-xl font-black text-rose-600" id="finTotalExpense">Rp 0</h2>
-                    </div>
-                </div>
-                <div class="bg-slate-900 p-5 rounded-2xl shadow-lg flex items-center gap-4 text-white">
-                    <div class="p-3 bg-slate-800 text-amber-400 rounded-xl text-2xl">⚖️</div>
-                    <div>
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Saldo Kas Bersih (Net Profit)</span>
-                        <h2 class="text-xl font-black text-amber-400" id="finNetProfit">Rp 0</h2>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
-                    <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider border-b pb-2 flex items-center gap-1.5">
-                        <span>💸</span> Catat Pengeluaran Baru
-                    </h3>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal</label>
-                        <input type="date" id="expDate" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori Pengeluaran</label>
-                        <select id="expCategory" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 font-medium">
-                            <option value="Belanja Bahan Baku">Belanja Bahan Baku / Sembako</option>
-                            <option value="Operasional Harian">Operasional (Gas/Mika/Es/Sabun)</option>
-                            <option value="Gaji Karyawan">Gaji Karyawan / Staff</option>
-                            <option value="Sewa Tempat & Listrik">Sewa Tempat & Listrik</option>
-                            <option value="Lain-lain">Biaya Tak Terduga / Lain-lain</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Nominal Biaya (Rp)</label>
-                        <input type="number" id="expAmount" placeholder="Contoh: 150000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 font-bold">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Keterangan Tambahan</label>
-                        <input type="text" id="expNote" placeholder="Contoh: Beli daging ayam 5kg" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500">
-                    </div>
-                    <button type="button" onclick="simpanPengeluaran()" class="w-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition shadow-sm">
-                        ➕ Catat Biaya Pengeluaran
-                    </button>
-                </div>
-
-                <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between space-y-6">
-                    <div>
-                        <div class="flex flex-wrap justify-between items-center gap-2 mb-4">
-                            <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
-                                <span>📖</span> Jurnal Arus Kas Keuangan Terintegrasi
-                            </h3>
-                            <div class="flex gap-2">
-                                <button onclick="eksporLaporanKeuanganKeCSV()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-xl border border-emerald-200 transition">
-                                    📥 Ekspor CSV
-                                </button>
-                                <button onclick="clearSemuaDataKeuangan()" class="text-rose-500 hover:text-rose-700 text-xs font-semibold border border-rose-100 px-2 py-1.5 rounded-xl hover:bg-rose-50 transition">
-                                    Reset Log
-                                </button>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Modal Pokok HPP Satuan (Rp)</label>
+                                <input type="number" id="stockPrice" placeholder="35000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500">
                             </div>
                         </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Keterangan / Satuan Unit</label>
+                            <input type="text" id="stockUnit" placeholder="Contoh: Kilogram, Pcs, Karung" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500">
+                        </div>
+                        <button type="button" onclick="simpanStokBarang()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition shadow-sm">
+                            💾 Simpan ke Inventori
+                        </button>
+                    </div>
+
+                    <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <span>📋</span> Real-time Ketersediaan Stok Inventori Gudang
+                        </h3>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-sm">
                                 <thead>
                                     <tr class="bg-slate-50 border-b border-slate-100 text-xs font-bold text-slate-500 uppercase">
-                                        <th class="p-3">Tanggal</th>
-                                        <th class="p-3">Tipe</th>
-                                        <th class="p-3">Kategori / Sumber</th>
-                                        <th class="p-3">Keterangan</th>
-                                        <th class="p-3 text-right">Debit (Masuk)</th>
-                                        <th class="p-3 text-right">Kredit (Keluar)</th>
-                                        <th class="p-3 text-center w-10">Aksi</th>
+                                        <th class="p-3">Tanggal Catat</th>
+                                        <th class="p-3">Nama Barang</th>
+                                        <th class="p-3 text-center">Jumlah Stok</th>
+                                        <th class="p-3">Satuan Unit</th>
+                                        <th class="p-3 text-right">Nilai HPP Satuan</th>
+                                        <th class="p-3">Status</th>
+                                        <th class="p-3 text-center w-12">Hapus</th>
                                     </tr>
                                 </thead>
-                                <tbody id="ledgerTableBody"></tbody>
+                                <tbody id="stockTableBody"></tbody>
                             </table>
                         </div>
                     </div>
-
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/60 space-y-3">
-                        <h4 class="text-xs font-bold uppercase text-slate-600 tracking-wide flex items-center gap-1">
-                            <span>🛡️</span> Manajemen Sistem Cadangan Data (Anti-Hilang)
-                        </h4>
-                        <p class="text-xs text-slate-500">Gunakan menu ini untuk mengamankan data transaksi Anda secara berkala, atau memindahkan seluruh data ke perangkat HP/Laptop lain dengan mudah.</p>
-                        <div class="flex flex-wrap gap-2">
-                            <button onclick="eksporSemuaDataKeJSON()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow-sm">
-                                📤 Unduh File Cadangan (.json)
-                            </button>
-                            <label class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow-sm cursor-pointer flex items-center">
-                                📥 Pulihkan Data dari File
-                                <input type="file" id="importFileJson" onchange="imporSemuaDataDariJSON(this)" accept=".json" class="hidden">
-                            </label>
-                        </div>
-                    </div>
-
                 </div>
             </div>
-        </div>
 
-        <div id="tab-stok" class="tab-content hidden space-y-6">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
-                    <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider border-b pb-2 flex items-center gap-1.5">
-                        <span>📦</span> Manajemen & Input Stok Gudang
-                    </h3>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Pencatatan / Opname</label>
-                        <input type="date" id="stockDate" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 font-medium">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Metode Input Kuantitas</label>
+            <div id="tab-harga" class="tab-content hidden space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+                        <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider border-b pb-2 flex items-center gap-1.5">
+                            <span>📝</span> Daftarkan Menu & Resep Potong Stok
+                        </h3>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Menu Makanan / Minuman</label>
+                            <input type="text" id="menuItemName" placeholder="Contoh: Ayam Bakar Spesial" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 font-medium">
+                        </div>
                         <div class="grid grid-cols-2 gap-2">
-                            <label class="flex items-center gap-2 p-2 bg-slate-50 rounded-xl border border-slate-200 text-xs cursor-pointer">
-                                <input type="radio" name="stockMethod" value="add" checked class="text-indigo-600 focus:ring-indigo-500">
-                                <span>➕ Tambah Stok</span>
-                            </label>
-                            <label class="flex items-center gap-2 p-2 bg-slate-50 rounded-xl border border-slate-200 text-xs cursor-pointer">
-                                <input type="radio" name="stockMethod" value="set" class="text-indigo-600 focus:ring-indigo-500">
-                                <span>🔄 Opname Baru</span>
-                            </label>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Harga Jual Resmi (Rp)</label>
+                                <input type="number" id="menuItemPrice" placeholder="25000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori Menu</label>
+                                <select id="menuItemCategory" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500">
+                                    <option value="Makanan Utama">Makanan Utama</option>
+                                    <option value="Minuman">Minuman</option>
+                                    <option value="Snack / Camilan">Snack / Camilan</option>
+                                    <option value="Paket Hemat">Paket Hemat</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Barang / Bahan Baku</label>
-                        <input type="text" id="stockName" placeholder="Contoh: Daging Ayam / Mika Box" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 font-medium">
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Jumlah</label>
-                            <input type="number" id="stockQty" placeholder="10" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 font-semibold">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Estimasi Harga (Rp)</label>
-                            <input type="number" id="stockPrice" placeholder="35000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Keterangan / Satuan Unit</label>
-                        <input type="text" id="stockUnit" placeholder="Contoh: Kilogram, Pcs, Karung" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500">
-                    </div>
-                    <button type="button" onclick="simpanStokBarang()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition shadow-sm">
-                        💾 Simpan ke Inventori
-                    </button>
-                </div>
 
-                <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                    <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
-                        <span>📋</span> Real-time Ketersediaan Stok Inventori Gudang
-                    </h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm">
-                            <thead>
-                                <tr class="bg-slate-50 border-b border-slate-100 text-xs font-bold text-slate-500 uppercase">
-                                    <th class="p-3">Tanggal Catat</th>
-                                    <th class="p-3">Nama Barang</th>
-                                    <th class="p-3 text-center">Jumlah Stok</th>
-                                    <th class="p-3">Satuan Unit</th>
-                                    <th class="p-3 text-right">Nilai Satuan</th>
-                                    <th class="p-3">Status</th>
-                                    <th class="p-3 text-center w-12">Hapus</th>
-                                </tr>
-                            </thead>
-                            <tbody id="stockTableBody"></tbody>
-                        </table>
+                        <div class="border-t border-dashed border-slate-200 pt-3 space-y-2">
+                            <span class="text-[11px] font-bold text-indigo-600 tracking-wider block uppercase">🔗 Hubungan Komposisi Bahan Baku (HPP)</span>
+                            <div>
+                                <label class="block text-xs text-slate-500 mb-1">Pilih Bahan di Gudang</label>
+                                <select id="menuResepBahan" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-blue-500 font-medium">
+                                    </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-500 mb-1">Jumlah Potong per Porsi Jual</label>
+                                <input type="number" id="menuResepQty" value="1" min="1" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold focus:outline-blue-500">
+                            </div>
+                        </div>
+
+                        <button type="button" onclick="simpanMenuHarga()" class="w-full bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition shadow-sm">
+                            📢 Daftarkan & Sinkronisasikan Menu
+                        </button>
+                    </div>
+
+                    <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+                            <span>📜</span> Master Katalog Daftar Harga & Hubungan Resep Gudang
+                        </h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead>
+                                    <tr class="bg-slate-50 border-b border-slate-100 text-xs font-bold text-slate-500 uppercase">
+                                        <th class="p-3">Nama Menu Terdaftar</th>
+                                        <th class="p-3">Kategori</th>
+                                        <th class="p-3 text-right">Harga Jual</th>
+                                        <th class="p-3 text-right">Estimasi HPP</th>
+                                        <th class="p-3">Resep Pengurangan</th>
+                                        <th class="p-3 text-center w-12">Hapus</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="priceListTableBody"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div id="tab-harga" class="tab-content hidden space-y-6">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
-                    <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider border-b pb-2 flex items-center gap-1.5">
-                        <span>📝</span> Daftarkan Menu / Produk Baru
-                    </h3>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Menu Makanan / Minuman</label>
-                        <input type="text" id="menuItemName" placeholder="Contoh: Ayam Bakar Spesial" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 font-medium">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Harga Jual Resmi (Rp)</label>
-                        <input type="number" id="menuItemPrice" placeholder="Contoh: 25000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 font-bold">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori Menu</label>
-                        <select id="menuItemCategory" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500">
-                            <option value="Makanan Utama">Makanan Utama</option>
-                            <option value="Minuman">Minuman</option>
-                            <option value="Snack / Camilan">Snack / Camilan</option>
-                            <option value="Paket Hemat">Paket Hemat</option>
-                        </select>
-                    </div>
-                    <button type="button" onclick="simpanMenuHarga()" class="w-full bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition shadow-sm">
-                        📢 Daftarkan & Sinkronisasikan
-                    </button>
-                </div>
-
-                <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                    <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
-                        <span>📜</span> Master Katalog Daftar Harga Produk Kuliner Terhubung Kasir
-                    </h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm">
-                            <thead>
-                                <tr class="bg-slate-50 border-b border-slate-100 text-xs font-bold text-slate-500 uppercase">
-                                    <th class="p-3">Nama Menu Terdaftar</th>
-                                    <th class="p-3">Kategori</th>
-                                    <th class="p-3 text-right">Harga Jual Resmi</th>
-                                    <th class="p-3 text-center w-12">Hapus</th>
-                                </tr>
-                            </thead>
-                            <tbody id="priceListTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <div id="printReceiptArea" class="hidden p-6 bg-white text-black font-mono text-sm max-w-sm mx-auto">
-        <div class="text-center space-y-1">
-            <h2 class="text-xl font-bold uppercase" id="receiptBizName">FOODBIZ PRO OUTLET</h2>
-            <p class="text-xs">Nota Bukti Transaksi Resmi Penjualan Harian</p>
-            <p class="text-xs" id="receiptTime">Waktu: -</p>
-        </div>
-        <div class="border-b border-dashed border-black my-3"></div>
-        <div class="text-xs space-y-1">
-            <p><b>Tanggal:</b> <span id="receiptDate">-</span></p>
-            <p><b>Pelanggan:</b> <span id="receiptCustomer">-</span></p>
-            <p><b>Metode:</b> <span id="receiptPayment">-</span></p>
-        </div>
-        <div class="border-b border-dashed border-black my-3"></div>
-        <table class="w-full text-xs">
-            <thead>
-                <tr class="text-left border-b border-black">
-                    <th class="pb-1">Item</th>
-                    <th class="pb-1 text-center">Qty</th>
-                    <th class="pb-1 text-right">Harga</th>
-                    <th class="pb-1 text-right">Total</th>
-                </tr>
-            </thead>
-            <tbody id="receiptItemsBody"></tbody>
-        </table>
-        <div class="border-b border-dashed border-black my-3"></div>
-        <div class="flex justify-between font-bold text-sm">
-            <span>GRAND TOTAL:</span>
-            <span id="receiptGrandTotal">Rp 0</span>
-        </div>
-        <div class="flex justify-between text-xs mt-1">
-            <span>DIBAYAR:</span>
-            <span id="receiptPaid">Rp 0</span>
-        </div>
-        <div class="flex justify-between text-xs font-bold text-slate-700">
-            <span>KEMBALIAN:</span>
-            <span id="receiptReturn">Rp 0</span>
-        </div>
-        <div class="border-b border-dashed border-black my-3"></div>
-        <div class="text-center text-[10px] space-y-1 mt-4">
-            <p>Terima Kasih Atas Kunjungan & Order Anda!</p>
-        </div>
+        </main>
     </div>
 
+    <div id="printReceiptArea" class="hidden"></div>
+
     <script>
+        // Default Database State
         let dbMenu = JSON.parse(localStorage.getItem('fbp_menu')) || [
-            { id: 1, name: "Ayam Bakar Komplit", price: 20000, category: "Makanan Utama" },
-            { id: 2, name: "Es Teh Manis Jumbo", price: 5000, category: "Minuman" }
+            { id: 1, name: "Ayam Bakar Komplit", price: 20000, category: "Makanan Utama", resepBahan: "Ayam Bakar Komplit", resepQty: 1 },
+            { id: 2, name: "Es Teh Manis Jumbo", price: 5000, category: "Minuman", resepBahan: "Es Teh Manis Jumbo", resepQty: 1 }
         ];
 
         let dbStok = JSON.parse(localStorage.getItem('fbp_stok')) || [
-            { id: 1, date: "2026-07-07", name: "Ayam Bakar Komplit", qty: 25, price: 15000, unit: "Porsi" },
+            { id: 1, date: "2026-07-07", name: "Ayam Bakar Komplit", qty: 25, price: 12000, unit: "Porsi" },
             { id: 2, date: "2026-07-07", name: "Es Teh Manis Jumbo", qty: 50, price: 1500, unit: "Gelas" }
         ];
 
@@ -448,13 +450,11 @@
             document.getElementById(tabId).classList.remove('hidden');
             
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('bg-white', 'text-blue-700', 'shadow-sm');
-                btn.classList.add('hover:bg-white/10', 'text-white');
+                btn.className = "tab-btn px-4 py-2 rounded-xl text-sm font-bold transition hover:bg-white/10 text-white";
             });
             
             const activeBtn = document.getElementById('btn-' + tabId);
-            activeBtn.classList.remove('hover:bg-white/10', 'text-white');
-            activeBtn.classList.add('bg-white', 'text-blue-700', 'shadow-sm');
+            activeBtn.className = "tab-btn px-4 py-2 rounded-xl text-sm font-bold transition bg-white text-blue-700 shadow-sm";
 
             renderSemuaHalaman();
         }
@@ -468,6 +468,14 @@
             let options = '';
             dbMenu.forEach(item => { options += `<option value="${item.name}"></option>`; });
             datalist.innerHTML = options;
+
+            // Update drop-down resep bahan baku
+            const selectBahan = document.getElementById('menuResepBahan');
+            let htmlBahan = '<option value="">-- Jual Tanpa Potong Stok (Non-Inventory) --</option>';
+            dbStok.forEach(s => {
+                htmlBahan += `<option value="${s.name}">${s.name} (${s.unit})</option>`;
+            });
+            selectBahan.innerHTML = htmlBahan;
         }
 
         function addOrderItemRow() {
@@ -545,9 +553,10 @@
 
             let itemsOrdered = []; 
             let totalTransaksi = 0;
+            let totalHppTransaksi = 0;
             let validasiStokAman = true;
 
-            // Loop 1: Validasi Ketersediaan Stok
+            // Loop 1: Validasi Ketersediaan Stok Komposisi Resep Real-Time
             rows.forEach(row => {
                 const nameInput = row.querySelector('.item-name-input');
                 if (!nameInput) return;
@@ -556,17 +565,21 @@
                 const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
                 
                 if (name && qty > 0) {
-                    let stokCocok = dbStok.find(s => s.name.toLowerCase() === name.toLowerCase());
-                    if (stokCocok && stokCocok.qty < qty) {
-                        alert(`❌ Gagal! Stok untuk "${stokCocok.name}" tidak mencukupi. Tersisa: ${stokCocok.qty}`);
-                        validasiStokAman = false;
+                    let menuDef = dbMenu.find(m => m.name.toLowerCase() === name.toLowerCase());
+                    if (menuDef && menuDef.resepBahan) {
+                        let stokCocok = dbStok.find(s => s.name.toLowerCase() === menuDef.resepBahan.toLowerCase());
+                        let totalButuh = menuDef.resepQty * qty;
+                        if (stokCocok && stokCocok.qty < totalButuh) {
+                            alert(`❌ Gagal Simpan! Stok bahan baku "${stokCocok.name}" tidak mencukupi.\nTersisa: ${stokCocok.qty} ${stokCocok.unit}. Kebutuhan transaksi: ${totalButuh}`);
+                            validasiStokAman = false;
+                        }
                     }
                 }
             });
 
             if (!validasiStokAman) return; 
 
-            // Loop 2: Eksekusi Pengurangan Stok & Pembuatan Array Item
+            // Loop 2: Pemotongan Stok & Kalkulasi HPP Jurnal
             rows.forEach(row => {
                 const nameInput = row.querySelector('.item-name-input');
                 if (!nameInput) return;
@@ -577,25 +590,28 @@
                 
                 if (name && qty > 0) {
                     const subtotal = qty * price;
-                    itemsOrdered.push({ name, qty, price, subtotal: subtotal });
-                    totalTransaksi += subtotal;
+                    let hppUnit = 0;
 
-                    let stokCocok = dbStok.find(s => s.name.toLowerCase() === name.toLowerCase());
-                    if (stokCocok) {
-                        stokCocok.qty = Math.max(0, stokCocok.qty - qty);
+                    let menuDef = dbMenu.find(m => m.name.toLowerCase() === name.toLowerCase());
+                    if (menuDef && menuDef.resepBahan) {
+                        let stokCocok = dbStok.find(s => s.name.toLowerCase() === menuDef.resepBahan.toLowerCase());
+                        if (stokCocok) {
+                            stokCocok.qty = Math.max(0, stokCocok.qty - (menuDef.resepQty * qty));
+                            hppUnit = stokCocok.price * menuDef.resepQty; 
+                        }
                     }
+
+                    totalHppTransaksi += (hppUnit * qty);
+                    itemsOrdered.push({ name, qty, price, subtotal: subtotal, hppTotal: (hppUnit * qty) });
+                    totalTransaksi += subtotal;
                 }
             });
 
-            if (itemsOrdered.length === 0) {
-                alert("Gagal! Tidak ada nama menu/item yang diisi dengan benar.");
-                return;
-            }
-
             const returnAmount = cashReceived > totalTransaksi ? (cashReceived - totalTransaksi) : 0;
+            const generatedId = "TRX-" + Date.now();
 
             const trx = { 
-                id: "TRX-" + Date.now(), 
+                id: generatedId, 
                 timestamp: new Date().toLocaleTimeString('id-ID'), 
                 date, 
                 customer, 
@@ -603,30 +619,99 @@
                 cashReceived: cashReceived || totalTransaksi,
                 cashReturn: returnAmount,
                 items: itemsOrdered, 
-                total: totalTransaksi 
+                total: totalTransaksi,
+                totalHpp: totalHppTransaksi
             };
             
             dbTransaksi.unshift(trx);
             localStorage.setItem('fbp_transaksi', JSON.stringify(dbTransaksi));
             localStorage.setItem('fbp_stok', JSON.stringify(dbStok));
 
-            alert("✅ Transaksi Berhasil Disimpan!");
+            // FIX: Render & Otomatis Cetak Struk Tanpa Area Layar Terganggu
+            setTimeout(() => {
+                cetakStrukNotaPdf(generatedId);
+                
+                document.getElementById('customerName').value = "";
+                document.getElementById('cashReceived').value = "";
+                document.getElementById('orderItemsBody').innerHTML = "";
+                addOrderItemRow();
+                renderSemuaHalaman();
+            }, 300);
+        }
+
+        function cetakStrukNotaPdf(id) {
+            const trx = dbTransaksi.find(t => t.id === id);
+            if (!trx) return;
+
+            const printArea = document.getElementById('printReceiptArea');
             
-            document.getElementById('customerName').value = "";
-            document.getElementById('cashReceived').value = "";
-            document.getElementById('orderItemsBody').innerHTML = "";
-            
-            addOrderItemRow();
-            renderSemuaHalaman();
+            let htmlItems = "";
+            trx.items.forEach(item => {
+                htmlItems += `
+                    <tr style="border-b: 1px dashed #000;">
+                        <td style="padding: 4px 0;">${item.name}<br><small>${item.qty} x ${formatRupiah(item.price)}</small></td>
+                        <td style="text-align: right; padding: 4px 0; vertical-align: bottom;">${formatRupiah(item.subtotal)}</td>
+                    </tr>`;
+            });
+
+            printArea.innerHTML = `
+                <div style="text-align: center; font-family: 'Courier New', Courier, monospace; line-height: 1.2;">
+                    <h3 style="margin: 0; font-size: 16px; font-weight: bold; uppercase">FOODBIZ OUTLET</h3>
+                    <p style="margin: 2px 0; font-size: 11px;">Nota Penjualan Kasir Digital</p>
+                    <p style="margin: 2px 0; font-size: 11px;">ID: ${trx.id}</p>
+                    <p style="margin: 2px 0; font-size: 11px;">Waktu: ${trx.date} ${trx.timestamp}</p>
+                    <div style="border-top: 1px dashed #000; margin: 8px 0;"></div>
+                    <div style="text-align: left; font-size: 11px; space-y: 2px;">
+                        <p style="margin:0;"><b>Pelanggan :</b> ${trx.customer}</p>
+                        <p style="margin:0;"><b>Metode BM  :</b> ${trx.paymentMethod || 'Cash'}</p>
+                    </div>
+                    <div style="border-top: 1px dashed #000; margin: 8px 0;"></div>
+                    <table style="width: 100%; font-size: 11px; text-align: left; border-collapse: collapse;">
+                        <thead>
+                            <tr style="border-b: 1px dashed #000;">
+                                <th style="padding-bottom: 4px;">Menu Item</th>
+                                <th style="text-align: right; padding-bottom: 4px;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${htmlItems}
+                        </tbody>
+                    </table>
+                    <div style="border-top: 1px dashed #000; margin: 8px 0;"></div>
+                    <table style="width: 100%; font-size: 12px; font-weight: bold; text-align: left;">
+                        <tr>
+                            <td>GRAND TOTAL :</td>
+                            <td style="text-align: right;">${formatRupiah(trx.total)}</td>
+                        </tr>
+                        <tr style="font-weight: normal; font-size: 11px;">
+                            <td>DIBAYAR     :</td>
+                            <td style="text-align: right;">${formatRupiah(trx.cashReceived)}</td>
+                        </tr>
+                        <tr style="font-weight: normal; font-size: 11px;">
+                            <td>KEMBALIAN   :</td>
+                            <td style="text-align: right;">${formatRupiah(trx.cashReturn || 0)}</td>
+                        </tr>
+                    </table>
+                    <div style="border-top: 1px dashed #000; margin: 12px 0 8px 0;"></div>
+                    <p style="font-size: 10px; margin: 0;">Terima Kasih Atas Kunjungan Anda!</p>
+                    <p style="font-size: 9px; color: #555; margin: 0;">Powered by FoodBiz Pro V2</p>
+                </div>
+            `;
+
+            // Trigger Jendela Cetak Sistem Operasi
+            window.print();
         }
 
         function hapusTransaksi(id) {
-            if (confirm("Apakah Anda yakin ingin membatalkan transaksi (Void) ini? Stok terpotong akan dikembalikan.")) {
+            if (confirm("Void transaksi ini? Stok terpotong akan dikembalikan ke gudang.")) {
                 const trx = dbTransaksi.find(t => t.id === id);
                 if (trx) {
                     trx.items.forEach(item => {
-                        let stokCocok = dbStok.find(s => s.name.toLowerCase() === item.name.toLowerCase());
-                        if (stokCocok) stokCocok.qty += item.qty;
+                        let menuDef = dbMenu.find(m => m.name.toLowerCase() === item.name.toLowerCase());
+                        if (menuDef && menuDef.resepBahan) {
+                            let stokCocok = dbStok.find(s => s.name.toLowerCase() === menuDef.resepBahan.toLowerCase());
+                            if (stokCocok) stokCocok.qty += (menuDef.resepQty * item.qty);
+                        }
                     });
                     dbTransaksi = dbTransaksi.filter(t => t.id !== id);
                     localStorage.setItem('fbp_transaksi', JSON.stringify(dbTransaksi));
@@ -634,25 +719,6 @@
                     renderSemuaHalaman();
                 }
             }
-        }
-
-        function cetakStrukNotaPdf(id) {
-            const trx = dbTransaksi.find(t => t.id === id);
-            if (!trx) return;
-            document.getElementById('receiptDate').innerText = trx.date;
-            document.getElementById('receiptCustomer').innerText = trx.customer;
-            document.getElementById('receiptPayment').innerText = trx.paymentMethod || "Cash";
-            document.getElementById('receiptTime').innerText = "Waktu: " + trx.timestamp;
-            document.getElementById('receiptGrandTotal').innerText = formatRupiah(trx.total);
-            document.getElementById('receiptPaid').innerText = formatRupiah(trx.cashReceived);
-            document.getElementById('receiptReturn').innerText = formatRupiah(trx.cashReturn || 0);
-            
-            let htmlItems = "";
-            trx.items.forEach(item => {
-                htmlItems += `<tr class="border-b border-black"><td class="py-1">${item.name}</td><td class="py-1 text-center">${item.qty}</td><td class="py-1 text-right">${formatRupiah(item.price)}</td><td class="py-1 text-right">${formatRupiah(item.subtotal)}</td></tr>`;
-            });
-            document.getElementById('receiptItemsBody').innerHTML = htmlItems;
-            window.print();
         }
 
         function simpanPengeluaran() {
@@ -709,69 +775,6 @@
             document.body.removeChild(link);
         }
 
-        // ========================================================
-        // CORE BARU: SINKRONISASI EKSPOR/IMPOR ALL-DATA JSON
-        // ========================================================
-        function eksporSemuaDataKeJSON() {
-            const paketData = {
-                menu: dbMenu,
-                stok: dbStok,
-                transaksi: dbTransaksi,
-                pengeluaran: dbPengeluaran
-            };
-            
-            const stringData = JSON.stringify(paketData, null, 2);
-            const blob = new Blob([stringData], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = `Cadangan_Database_FoodBizPro_${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        }
-
-        function imporSemuaDataDariJSON(inputEl) {
-            const file = inputEl.files[0];
-            if (!file) return;
-
-            if (!confirm("⚠️ Peringatan!\nMemulihkan data dari file cadangan akan menimpa data yang ada saat ini. Apakah Anda yakin ingin melanjutkan?")) {
-                inputEl.value = "";
-                return;
-            }
-
-            const pembaca = new FileReader();
-            pembaca.onload = function(e) {
-                try {
-                    const dataTerurai = JSON.parse(e.target.result);
-                    
-                    if (dataTerurai.menu && dataTerurai.stok && dataTerurai.transaksi && dataTerurai.pengeluaran) {
-                        dbMenu = dataTerurai.menu;
-                        dbStok = dataTerurai.stok;
-                        dbTransaksi = dataTerurai.transaksi;
-                        dbPengeluaran = dataTerurai.pengeluaran;
-                        
-                        localStorage.setItem('fbp_menu', JSON.stringify(dbMenu));
-                        localStorage.setItem('fbp_stok', JSON.stringify(dbStok));
-                        localStorage.setItem('fbp_transaksi', JSON.stringify(dbTransaksi));
-                        localStorage.setItem('fbp_pengeluaran', JSON.stringify(dbPengeluaran));
-                        
-                        alert("✅ Database Berhasil Dipulihkan Sepenuhnya!");
-                        renderSemuaHalaman();
-                    } else {
-                        alert("❌ Gagal! Format file cadangan tidak cocok dengan sistem FoodBiz Pro.");
-                    }
-                } catch (err) {
-                    alert("❌ Terjadi kesalahan saat membaca file .json. Pastikan file tidak rusak.");
-                }
-                inputEl.value = "";
-            };
-            pembaca.readAsText(file);
-        }
-        // ========================================================
-
         function simpanStokBarang() {
             const date = document.getElementById('stockDate').value;
             const method = document.querySelector('input[name="stockMethod"]:checked').value;
@@ -786,11 +789,8 @@
             let eksis = dbStok.find(s => s.name.toLowerCase() === name.toLowerCase());
             if (eksis) {
                 eksis.date = date;
-                if (method === 'add') {
-                    eksis.qty += qty;
-                } else {
-                    eksis.qty = qty;
-                }
+                if (method === 'add') { eksis.qty += qty; } 
+                else { eksis.qty = qty; }
                 if(price > 0) eksis.price = price;
                 if(unit !== "Unit") eksis.unit = unit;
             } else {
@@ -798,13 +798,10 @@
             }
 
             localStorage.setItem('fbp_stok', JSON.stringify(dbStok));
-            alert(`📦 Stok "${name}" berhasil diperbarui!`);
-
             document.getElementById('stockName').value = "";
             document.getElementById('stockQty').value = "";
             document.getElementById('stockPrice').value = "";
             document.getElementById('stockUnit').value = "";
-
             renderSemuaHalaman();
         }
 
@@ -812,15 +809,25 @@
             const name = document.getElementById('menuItemName').value.trim();
             const price = parseFloat(document.getElementById('menuItemPrice').value) || 0;
             const category = document.getElementById('menuItemCategory').value;
+            const resepBahan = document.getElementById('menuResepBahan').value;
+            const resepQty = parseFloat(document.getElementById('menuResepQty').value) || 1;
 
             if (!name || price <= 0) { alert("Lengkapi Nama Menu dan Harga Jual!"); return; }
+            
             let eksis = dbMenu.find(m => m.name.toLowerCase() === name.toLowerCase());
-            if (eksis) { eksis.price = price; eksis.category = category; }
-            else { dbMenu.push({ id: Date.now(), name, price, category }); }
+            if (eksis) { 
+                eksis.price = price; 
+                eksis.category = category;
+                eksis.resepBahan = resepBahan;
+                eksis.resepQty = resepQty;
+            } else { 
+                dbMenu.push({ id: Date.now(), name, price, category, resepBahan, resepQty }); 
+            }
 
             localStorage.setItem('fbp_menu', JSON.stringify(dbMenu));
             document.getElementById('menuItemName').value = "";
             document.getElementById('menuItemPrice').value = "";
+            document.getElementById('menuResepQty').value = "1";
             renderSemuaHalaman();
         }
 
@@ -842,20 +849,30 @@
                     if(t.paymentMethod === 'QRIS') badgeMethod = `<span class="bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded text-[10px]">📱 QRIS</span>`;
                     if(t.paymentMethod === 'Transfer') badgeMethod = `<span class="bg-purple-100 text-purple-700 font-bold px-2 py-0.5 rounded text-[10px]">🏦 TRF</span>`;
 
-                    htmlTrx += `<tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-3 text-xs font-mono font-bold text-slate-600">${t.id}</td><td class="p-3 text-xs font-medium">${t.date}</td><td class="p-3 text-xs font-bold text-blue-700">${t.customer}</td><td class="p-3 text-xs">${badgeMethod}</td><td class="p-3 text-xs text-slate-600 truncate max-w-xs">${itemsStr}</td><td class="p-3 text-xs font-black text-right text-emerald-600">${formatRupiah(t.total)}</td><td class="p-3 text-center flex justify-center gap-1"><button onclick="cetakStrukNotaPdf('${t.id}')" class="bg-blue-50 hover:bg-blue-100 text-blue-700 text-[11px] font-bold px-2 py-1 rounded-lg">🖨️ Struk</button><button onclick="hapusTransaksi('${t.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-700 text-[11px] font-bold px-2 py-1 rounded-lg">✕ Void</button></td></tr>`;
+                    htmlTrx += `<tr class="border-b border-slate-100 hover:bg-slate-50"><td class="p-3 text-xs font-mono font-bold text-slate-600">${t.id}</td><td class="p-3 text-xs font-medium">${t.date}</td><td class="p-3 text-xs font-bold text-blue-700">${t.customer}</td><td class="p-3 text-xs">${badgeMethod}</td><td class="p-3 text-xs text-slate-600 truncate max-w-xs">${itemsStr}</td><td class="p-3 text-xs font-black text-right text-emerald-600">${formatRupiah(t.total)}</td><td class="p-3 text-center flex justify-center gap-1"><button onclick="cetakStrukNotaPdf('${t.id}')" class="bg-blue-50 hover:bg-blue-100 text-blue-700 text-[11px] font-bold px-2 py-1 rounded-lg">🖨️ Cetak</button><button onclick="hapusTransaksi('${t.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-700 text-[11px] font-bold px-2 py-1 rounded-lg">✕ Void</button></td></tr>`;
                 });
                 salesLogBody.innerHTML = htmlTrx;
             }
 
-            // 2. Jurnal Arus Kas
-            let totalRevenue = 0; let totalExpense = 0; let gabunganArusKas = [];
-            dbTransaksi.forEach(t => { totalRevenue += t.total; gabunganArusKas.push({ id: t.id, date: t.date, type: "MASUK (OMSET)", category: `Penjualan [${t.paymentMethod || 'Cash'}]`, note: `Pelanggan: ${t.customer}`, debit: t.total, credit: 0, isTrx: true }); });
-            dbPengeluaran.forEach(e => { totalExpense += e.amount; gabunganArusKas.push({ id: e.id, date: e.date, type: "KELUAR (BIAYA)", category: e.category, note: e.note, debit: 0, credit: e.amount, isTrx: false }); });
+            // 2. Jurnal Keuangan + Akumulasi Total HPP Dinamis (Poin 4)
+            let totalRevenue = 0; let totalHppTerakumulasi = 0; let gabunganArusKas = [];
+            
+            dbTransaksi.forEach(t => { 
+                totalRevenue += t.total; 
+                totalHppTerakumulasi += (t.totalHpp || 0);
+                gabunganArusKas.push({ id: t.id, date: t.date, type: "MASUK (OMSET)", category: `Penjualan [${t.paymentMethod || 'Cash'}]`, note: `Pelanggan: ${t.customer}`, debit: t.total, credit: 0, isTrx: true }); 
+            });
+            
+            dbPengeluaran.forEach(e => { 
+                totalHppTerakumulasi += e.amount; 
+                gabunganArusKas.push({ id: e.id, date: e.date, type: "KELUAR (BIAYA)", category: e.category, note: e.note, debit: 0, credit: e.amount, isTrx: false }); 
+            });
+            
             gabunganArusKas.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             document.getElementById('finTotalRevenue').innerText = formatRupiah(totalRevenue);
-            document.getElementById('finTotalExpense').innerText = formatRupiah(totalExpense);
-            document.getElementById('finNetProfit').innerText = formatRupiah(totalRevenue - totalExpense);
+            document.getElementById('finTotalExpense').innerText = formatRupiah(totalHppTerakumulasi);
+            document.getElementById('finNetProfit').innerText = formatRupiah(totalRevenue - totalHppTerakumulasi);
 
             const ledgerBody = document.getElementById('ledgerTableBody');
             if (gabunganArusKas.length === 0) {
@@ -869,38 +886,82 @@
                 ledgerBody.innerHTML = htmlLedger;
             }
 
-            // 3. Render Ketersediaan Stok
+            // 3. Render Ketersediaan Stok Gudang
             const stockBody = document.getElementById('stockTableBody');
             let htmlStok = "";
             dbStok.forEach(s => {
                 let statusBadge = s.qty <= 5 ? `<span class="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded-full font-bold">⚠️ Menipis</span>` : `<span class="bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded-full font-bold">✓ Aman</span>`;
                 if(s.qty === 0) statusBadge = `<span class="bg-rose-100 text-rose-800 text-[10px] px-2 py-0.5 rounded-full font-bold">❌ Habis</span>`;
                 
-                let tanggalTampil = s.date ? s.date : "-";
-
                 htmlStok += `
                     <tr class="border-b border-slate-100 hover:bg-slate-50 text-xs">
-                        <td class="p-3 font-mono text-slate-500">${tanggalTampil}</td>
+                        <td class="p-3 font-mono text-slate-500">${s.date || '-'}</td>
                         <td class="p-3 font-bold text-slate-700">${s.name}</td>
                         <td class="p-3 font-extrabold text-center text-indigo-700 bg-indigo-50/40">${s.qty}</td>
                         <td class="p-3 text-slate-500">${s.unit}</td>
                         <td class="p-3 text-right font-medium text-slate-600">${formatRupiah(s.price)}</td>
                         <td class="p-3">${statusBadge}</td>
-                        <td class="p-3 text-center">
-                            <button onclick="hapusStok(${s.id})" class="text-rose-400 hover:text-rose-600 font-bold">✕</button>
-                        </td>
-                    </tr>
-                `;
+                        <td class="p-3 text-center"><button onclick="hapusStok(${s.id})" class="text-rose-400 hover:text-rose-600 font-bold">✕</button></td>
+                    </tr>`;
             });
             stockBody.innerHTML = htmlStok || `<tr><td colspan="7" class="p-4 text-center text-xs text-slate-400">Gudang inventori kosong.</td></tr>`;
 
-            // 4. Render Master Katalog Harga
+            // 4. Render Master Katalog + Info HPP (Poin 4)
             const priceBody = document.getElementById('priceListTableBody');
             let htmlMenu = "";
             dbMenu.forEach(m => {
-                htmlMenu += `<tr class="border-b border-slate-100 hover:bg-slate-50 text-xs"><td class="p-3 font-bold text-slate-700">🍔 ${m.name}</td><td class="p-3 text-slate-500"><span class="bg-slate-100 px-2 py-0.5 rounded-md">${m.category}</span></td><td class="p-3 text-right font-black text-blue-700">${formatRupiah(m.price)}</td><td class="p-3 text-center"><button onclick="hapusMenu(${m.id})" class="text-rose-400 hover:text-rose-600 font-bold">✕</button></td></tr>`;
+                let bahanTxt = m.resepBahan ? `${m.resepBahan} (-${m.resepQty})` : `<span class="text-slate-400 text-[11px]">No-Stok</span>`;
+                
+                // Cari real-time biaya HPP dari tab stok gudang
+                let hitungHppBahan = 0;
+                if (m.resepBahan) {
+                    let cocokStok = dbStok.find(s => s.name.toLowerCase() === m.resepBahan.toLowerCase());
+                    if (cocokStok) hitungHppBahan = cocokStok.price * m.resepQty;
+                }
+
+                htmlMenu += `
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 text-xs">
+                        <td class="p-3 font-bold text-slate-700">🍔 ${m.name}</td>
+                        <td class="p-3 text-slate-500"><span class="bg-slate-100 px-2 py-0.5 rounded-md">${m.category}</span></td>
+                        <td class="p-3 text-right font-black text-blue-700">${formatRupiah(m.price)}</td>
+                        <td class="p-3 text-right font-medium text-slate-500">${formatRupiah(hitungHppBahan)}</td>
+                        <td class="p-3 font-semibold text-indigo-600">${bahanTxt}</td>
+                        <td class="p-3 text-center"><button onclick="hapusMenu(${m.id})" class="text-rose-400 hover:text-rose-600 font-bold">✕</button></td>
+                    </tr>`;
             });
-            priceBody.innerHTML = htmlMenu || `<tr><td colspan="4" class="p-4 text-center text-xs text-slate-400">Belum ada produk terdaftar.</td></tr>`;
+            priceBody.innerHTML = htmlMenu || `<tr><td colspan="6" class="p-4 text-center text-xs text-slate-400">Belum ada produk terdaftar.</td></tr>`;
+        }
+
+        // Ekspor/Impor JSON System Backup
+        function eksporSemuaDataKeJSON() {
+            const paketData = { menu: dbMenu, stok: dbStok, transaksi: dbTransaksi, pengeluaran: dbPengeluaran };
+            const blob = new Blob([JSON.stringify(paketData, null, 2)], { type: "application/json" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Cadangan_Database_FoodBizPro_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+        }
+
+        function imporSemuaDataDariJSON(inputEl) {
+            const file = inputEl.files[0]; if (!file) return;
+            if (!confirm("⚠️ Peringatan!\nMemulihkan data akan menimpa data yang ada saat ini. Lanjutkan?")) { inputEl.value = ""; return; }
+            const pembaca = new FileReader();
+            pembaca.onload = function(e) {
+                try {
+                    const d = JSON.parse(e.target.result);
+                    if (d.menu && d.stok && d.transaksi && d.pengeluaran) {
+                        dbMenu = d.menu; dbStok = d.stok; dbTransaksi = d.transaksi; dbPengeluaran = d.pengeluaran;
+                        localStorage.setItem('fbp_menu', JSON.stringify(dbMenu));
+                        localStorage.setItem('fbp_stok', JSON.stringify(dbStok));
+                        localStorage.setItem('fbp_transaksi', JSON.stringify(dbTransaksi));
+                        localStorage.setItem('fbp_pengeluaran', JSON.stringify(dbPengeluaran));
+                        alert("✅ Database Berhasil Dipulihkan Sepenuhnya!");
+                        renderSemuaHalaman();
+                    } else { alert("❌ Format file tidak cocok."); }
+                } catch (err) { alert("❌ Terjadi kesalahan file .json."); }
+                inputEl.value = "";
+            };
+            pembaca.readAsText(file);
         }
 
         document.addEventListener("DOMContentLoaded", function() {
