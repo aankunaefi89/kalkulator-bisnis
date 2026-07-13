@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FoodBiz Pro V2 - Sistem Manajemen Kuliner Terpadu</title>
+    <title>FoodBiz Pro V2 - Sistem Kasir Terpadu</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -126,7 +126,7 @@
                     </div>
                     <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700/50 mt-6 text-xs text-slate-300 space-y-1">
                         <p class="font-bold text-amber-400">💡 Sistem Validasi Stok:</p>
-                        <p>Aplikasi sekarang otomatis mengecek ketersediaan gudang dan mencegah penjualan produk yang melampaui jumlah stok riil.</p>
+                        <p>Aplikasi otomatis mendeteksi ketersediaan stok gudang serta memproses item non-stok dengan aman.</p>
                     </div>
                 </div>
             </div>
@@ -154,7 +154,6 @@
             </div>
         </div>
 
-        <!-- TAB LAPORAN KEUANGAN -->
         <div id="tab-laporan" class="tab-content hidden space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-emerald-100 flex items-center gap-4">
@@ -248,7 +247,6 @@
             </div>
         </div>
 
-        <!-- TAB STOK -->
         <div id="tab-stok" class="tab-content hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
@@ -319,7 +317,6 @@
             </div>
         </div>
 
-        <!-- TAB DAFTAR HARGA -->
         <div id="tab-harga" class="tab-content hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
@@ -371,7 +368,6 @@
 
     </main>
 
-    <!-- AREA STRUK NOTA UNTUK DICETAK -->
     <div id="printReceiptArea" class="hidden p-6 bg-white text-black font-mono text-sm max-w-sm mx-auto">
         <div class="text-center space-y-1">
             <h2 class="text-xl font-bold uppercase" id="receiptBizName">FOODBIZ PRO OUTLET</h2>
@@ -450,7 +446,6 @@
             return "Rp " + Math.round(angka).toLocaleString('id-ID');
         }
 
-        // --- TAB 1: PENJUALAN ---
         function updateGlobalMenuListDatalist() {
             const datalist = document.getElementById('globalMenuList');
             let options = '';
@@ -531,12 +526,16 @@
                 return;
             }
 
-            let itemsOrdered = []; let totalTransaksi = 0;
+            let itemsOrdered = []; 
+            let totalTransaksi = 0;
             let validasiStokAman = true;
 
-            // Loop 1: Validasi Ketersediaan Stok Terlebih Dahulu
+            // Loop 1: Validasi Ketersediaan Stok
             rows.forEach(row => {
-                const name = row.querySelector('.item-name-input').value.trim();
+                const nameInput = row.querySelector('.item-name-input');
+                if (!nameInput) return;
+                
+                const name = nameInput.value.trim();
                 const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
                 
                 if (name && qty > 0) {
@@ -548,22 +547,33 @@
                 }
             });
 
-            if(!validasiStokAman) return; // Batalkan proses simpan jika stok tidak cukup
+            if (!validasiStokAman) return; 
 
-            // Loop 2: Eksekusi Pengurangan Stok & Pembuatan Item Array
+            // Loop 2: Eksekusi Pengurangan Stok & Pembuatan Array Item
             rows.forEach(row => {
-                const name = row.querySelector('.item-name-input').value;
+                const nameInput = row.querySelector('.item-name-input');
+                if (!nameInput) return;
+
+                const name = nameInput.value.trim();
                 const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
                 const price = parseFloat(row.querySelector('.item-price').value) || 0;
                 
                 if (name && qty > 0) {
-                    itemsOrdered.push({ name, qty, price, subtotal: qty * price });
-                    totalTransaksi += (qty * price);
+                    const subtotal = qty * price;
+                    itemsOrdered.push({ name, qty, price, subtotal: subtotal });
+                    totalTransaksi += subtotal;
 
                     let stokCocok = dbStok.find(s => s.name.toLowerCase() === name.toLowerCase());
-                    if (stokCocok) stokCocok.qty = Math.max(0, stokCocok.qty - qty);
+                    if (stokCocok) {
+                        stokCocok.qty = Math.max(0, stokCocok.qty - qty);
+                    }
                 }
             });
+
+            if (itemsOrdered.length === 0) {
+                alert("Gagal! Tidak ada nama menu/item yang diisi dengan benar.");
+                return;
+            }
 
             const returnAmount = cashReceived > totalTransaksi ? (cashReceived - totalTransaksi) : 0;
 
@@ -584,9 +594,11 @@
             localStorage.setItem('fbp_stok', JSON.stringify(dbStok));
 
             alert("✅ Transaksi Berhasil Disimpan!");
+            
             document.getElementById('customerName').value = "";
             document.getElementById('cashReceived').value = "";
             document.getElementById('orderItemsBody').innerHTML = "";
+            
             addOrderItemRow();
             renderSemuaHalaman();
         }
@@ -626,7 +638,6 @@
             window.print();
         }
 
-        // --- TAB 2: LAPORAN KEUANGAN ---
         function simpanPengeluaran() {
             const date = document.getElementById('expDate').value;
             const category = document.getElementById('expCategory').value;
@@ -681,7 +692,6 @@
             document.body.removeChild(link);
         }
 
-        // --- TAB 3: STOK BARANG ---
         function simpanStokBarang() {
             const date = document.getElementById('stockDate').value;
             const method = document.querySelector('input[name="stockMethod"]:checked').value;
@@ -718,7 +728,6 @@
             renderSemuaHalaman();
         }
 
-        // --- TAB 4: DAFTAR HARGA MENU ---
         function simpanMenuHarga() {
             const name = document.getElementById('menuItemName').value.trim();
             const price = parseFloat(document.getElementById('menuItemPrice').value) || 0;
@@ -738,7 +747,6 @@
         function hapusMenu(id) { dbMenu = dbMenu.filter(m => m.id !== id); localStorage.setItem('fbp_menu', JSON.stringify(dbMenu)); renderSemuaHalaman(); }
         function hapusStok(id) { dbStok = dbStok.filter(s => s.id !== id); localStorage.setItem('fbp_stok', JSON.stringify(dbStok)); renderSemuaHalaman(); }
 
-        // ================= RENDERING ENGINE =================
         function renderSemuaHalaman() {
             updateGlobalMenuListDatalist();
 
