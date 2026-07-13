@@ -11,7 +11,6 @@
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         
-        /* FIX TOTAL STRUK KOSONG: CSS Khusus Layar vs Cetak Printer */
         @media print {
             body *, .no-print { 
                 visibility: hidden; 
@@ -40,28 +39,33 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen pb-12">
 
+    <!-- Area Utama Aplikasi (Akan disembunyikan otomatis saat mencetak) -->
     <div class="no-print">
         <header class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white shadow-md sticky top-0 z-50">
             <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div class="flex items-center gap-3">
                     <span class="text-3xl">🏪</span>
                     <div>
-                        <h1 class="text-xl font-bold tracking-wide">FoodBiz Pro V2</h1>
-                        <p class="text-xs text-indigo-200">Sistem Kasir Terintegrasi, Manajemen Stok & Multi-Metode Pembayaran</p>
+                        <!-- BINDING DENGAN PROFILE TOKO -->
+                        <h1 id="headerStoreName" class="text-xl font-bold tracking-wide">FoodBiz Pro V2</h1>
+                        <p id="headerStoreTagline" class="text-xs text-indigo-200">Sistem Kasir Terintegrasi, Manajemen Stok & Multi-Metode Pembayaran</p>
                     </div>
                 </div>
                 <nav class="flex flex-wrap gap-2">
-                    <button onclick="switchTab('tab-penjualan')" id="btn-tab-penjualan" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold transition bg-white text-blue-700 shadow-sm">
-                        🛍️ Penjualan Harian
+                    <button onclick="switchTab('tab-penjualan')" id="btn-tab-penjualan" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold transition bg-white text-blue-700 shadow-sm">
+                        🛍️ Penjualan
                     </button>
-                    <button onclick="switchTab('tab-laporan')" id="btn-tab-laporan" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold transition hover:bg-white/10 text-white">
-                        📊 Laporan Keuangan
+                    <button onclick="switchTab('tab-laporan')" id="btn-tab-laporan" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold transition hover:bg-white/10 text-white">
+                        📊 Laporan
                     </button>
-                    <button onclick="switchTab('tab-stok')" id="btn-tab-stok" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold transition hover:bg-white/10 text-white">
-                        📦 Stok Barang
+                    <button onclick="switchTab('tab-stok')" id="btn-tab-stok" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold transition hover:bg-white/10 text-white">
+                        📦 Stok Gudang
                     </button>
-                    <button onclick="switchTab('tab-harga')" id="btn-tab-harga" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold transition hover:bg-white/10 text-white">
-                        📋 Daftar Harga Menu
+                    <button onclick="switchTab('tab-harga')" id="btn-tab-harga" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold transition hover:bg-white/10 text-white">
+                        📋 Daftar Menu
+                    </button>
+                    <button onclick="switchTab('tab-profil')" id="btn-tab-profil" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold transition hover:bg-white/10 text-white">
+                        ⚙️ Profil Toko
                     </button>
                 </nav>
             </div>
@@ -69,6 +73,7 @@
 
         <main class="max-w-7xl mx-auto px-4 mt-8">
             
+            <!-- TAB 1: PENJUALAN -->
             <div id="tab-penjualan" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
@@ -171,6 +176,7 @@
                 </div>
             </div>
 
+            <!-- TAB 2: LAPORAN -->
             <div id="tab-laporan" class="tab-content hidden space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-emerald-100 flex items-center gap-4">
@@ -280,6 +286,7 @@
                 </div>
             </div>
 
+            <!-- TAB 3: STOK GUDANG -->
             <div id="tab-stok" class="tab-content hidden space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
@@ -350,6 +357,7 @@
                 </div>
             </div>
 
+            <!-- TAB 4: LIST MENU -->
             <div id="tab-harga" class="tab-content hidden space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
@@ -423,17 +431,57 @@
                 </div>
             </div>
 
+            <!-- TAB NEW 5: PENGATURAN PROFIL TOKO -->
+            <div id="tab-profil" class="tab-content hidden max-w-xl mx-auto">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+                    <div class="border-b pb-3">
+                        <h3 class="text-base font-bold text-slate-700 flex items-center gap-2">
+                            <span>⚙️</span> Pengaturan Identitas & Profil Toko Anda
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-0.5">Sesuaikan nama yang tampil di aplikasi kasir utama dan struk cetak nota printer.</p>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Toko / Bisnis</label>
+                        <input type="text" id="profStoreName" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-bold focus:outline-blue-500 text-slate-700">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Slogan / Deskripsi Singkat</label>
+                        <input type="text" id="profStoreTagline" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 text-slate-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Alamat Lengkap Toko</label>
+                        <input type="text" id="profStoreAddress" placeholder="Contoh: Jl. Sudirman No. 12, Jakarta" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 text-slate-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">No. WhatsApp / Kontak Struk</label>
+                        <input type="text" id="profStorePhone" placeholder="Contoh: 0812-3456-7890" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 text-slate-600">
+                    </div>
+                    <button type="button" onclick="simpanProfilToko Baru()" class="w-full bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold py-3 px-4 rounded-xl transition shadow-md">
+                        🔄 Perbarui Nama Toko & Struktur Struk
+                    </button>
+                </div>
+            </div>
+
         </main>
     </div>
 
+    <!-- AREA STRUK EXCLUSIVE PRINT -->
     <div id="printReceiptArea" class="hidden"></div>
 
     <script>
-        // Database State Local Storage
+        // Database State Local Storage dengan default value profile
         let dbMenu = JSON.parse(localStorage.getItem('fbp_menu')) || [];
         let dbStok = JSON.parse(localStorage.getItem('fbp_stok')) || [];
         let dbTransaksi = JSON.parse(localStorage.getItem('fbp_transaksi')) || [];
         let dbPengeluaran = JSON.parse(localStorage.getItem('fbp_pengeluaran')) || [];
+        
+        let dbProfil = JSON.parse(localStorage.getItem('fbp_profil')) || {
+            name: "FoodBiz Pro V2",
+            tagline: "Sistem Kasir Terintegrasi, Manajemen Stok & Multi-Metode Pembayaran",
+            address: "Live Counter Utama",
+            phone: "-"
+        };
+
         let currentGrandTotalGlobal = 0;
 
         function switchTab(tabId) {
@@ -441,17 +489,45 @@
             document.getElementById(tabId).classList.remove('hidden');
             
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.className = "tab-btn px-4 py-2 rounded-xl text-sm font-bold transition hover:bg-white/10 text-white";
+                btn.className = "tab-btn px-3 py-2 rounded-xl text-xs font-bold transition hover:bg-white/10 text-white";
             });
             
             const activeBtn = document.getElementById('btn-' + tabId);
-            activeBtn.className = "tab-btn px-4 py-2 rounded-xl text-sm font-bold transition bg-white text-blue-700 shadow-sm";
+            activeBtn.className = "tab-btn px-3 py-2 rounded-xl text-xs font-bold transition bg-white text-blue-700 shadow-sm";
 
             renderSemuaHalaman();
         }
 
         function formatRupiah(angka) {
             return "Rp " + Math.round(angka).toLocaleString('id-ID');
+        }
+
+        // FUNGSI PROFIL BARU
+        function muatProfilKeFormDanHeader() {
+            // Pasang di header atas aplikasi
+            document.getElementById('headerStoreName').innerText = dbProfil.name;
+            document.getElementById('headerStoreTagline').innerText = dbProfil.tagline;
+
+            // Pasang di input form tab pengaturan
+            document.getElementById('profStoreName').value = dbProfil.name;
+            document.getElementById('profStoreTagline').value = dbProfil.tagline;
+            document.getElementById('profStoreAddress').value = dbProfil.address;
+            document.getElementById('profStorePhone').value = dbProfil.phone;
+        }
+
+        function simpanProfilTokoBaru() {
+            const name = document.getElementById('profStoreName').value.trim() || "FoodBiz Pro V2";
+            const tagline = document.getElementById('profStoreTagline').value.trim() || "Sistem Kasir Pintar";
+            const address = document.getElementById('profStoreAddress').value.trim() || "Live Counter Utama";
+            const phone = document.getElementById('profStorePhone').value.trim() || "-";
+
+            dbProfil = { name, tagline, address, phone };
+            localStorage.setItem('fbp_profil', JSON.stringify(dbProfil));
+            
+            // Re-render header & berikan alert sukses
+            muatProfilKeFormDanHeader();
+            alert("✨ Sukses! Profil toko berhasil diperbarui di sistem dan cetakan nota.");
+            switchTab('tab-penjualan'); // Kembalikan ke halaman kasir utama
         }
 
         function updateGlobalMenuListDatalist() {
@@ -605,6 +681,7 @@
             }, 200);
         }
 
+        // FUNGSI PRINT STRUK DI-UPDATE UNTUK MENGGUNAKAN PROFILE DINAMIS
         function cetakStrukNotaPdf(id) {
             const trx = dbTransaksi.find(t => t.id === id);
             if (!trx) return;
@@ -613,7 +690,34 @@
             trx.items.forEach(item => {
                 htmlItems += `<tr><td style="padding:4px 0;">${item.name}<br><small>${item.qty} x ${formatRupiah(item.price)}</small></td><td style="text-align:right; vertical-align:bottom;">${formatRupiah(item.subtotal)}</td></tr>`;
             });
-            printArea.innerHTML = `<div style="text-align:center;"><h3 style="margin:0; font-size:15px; font-weight:bold;">FOODBIZ OUTLET</h3><p style="margin:2px 0; font-size:11px;">Nota Kasir Digital</p><p style="margin:2px 0; font-size:11px;">${trx.date} ${trx.timestamp}</p><div style="border-top:1px dashed #000; margin:6px 0;"></div><div style="text-align:left; font-size:11px;"><p style="margin:0;">Pelanggan: ${trx.customer}</p><p style="margin:0;">Metode   : ${trx.paymentMethod}</p></div><div style="border-top:1px dashed #000; margin:6px 0;"></div><table style="width:100%; font-size:11px; text-align:left;">${htmlItems}</table><div style="border-top:1px dashed #000; margin:6px 0;"></div><table style="width:100%; font-size:11px; font-weight:bold;"><tr><td>GRAND TOTAL:</td><td style="text-align:right;">${formatRupiah(trx.total)}</td></tr><tr><td style="font-weight:normal;">DIBAYAR:</td><td style="text-align:right; font-weight:normal;">${formatRupiah(trx.cashReceived)}</td></tr><tr><td style="font-weight:normal;">KEMBALIAN:</td><td style="text-align:right; font-weight:normal;">${formatRupiah(trx.cashReturn)}</td></tr></table><div style="border-top:1px dashed #000; margin:10px 0 4px 0;"></div><p style="font-size:10px; margin:0;">Terima Kasih Atas Kunjungan Anda!</p></div>`;
+            
+            printArea.innerHTML = `
+                <div style="text-align:center;">
+                    <!-- DINAMIS SESUAI PROFIL PEMILIK -->
+                    <h3 style="margin:0; font-size:16px; font-weight:bold; uppercase">${dbProfil.name}</h3>
+                    <p style="margin:2px 0; font-size:11px; italic">${dbProfil.tagline}</p>
+                    <p style="margin:2px 0; font-size:10px; color:#555;">${dbProfil.address}</p>
+                    ${dbProfil.phone !== "-" ? `<p style="margin:1px 0; font-size:10px;">Telp/WA: ${dbProfil.phone}</p>` : ''}
+                    
+                    <div style="border-top:1px dashed #000; margin:6px 0;"></div>
+                    <div style="text-align:left; font-size:11px;">
+                        <p style="margin:0;">No. Nota : ${trx.id}</p>
+                        <p style="margin:0;">Waktu    : ${trx.date} ${trx.timestamp}</p>
+                        <p style="margin:0;">Pelanggan: ${trx.customer}</p>
+                        <p style="margin:0;">Metode   : ${trx.paymentMethod}</p>
+                    </div>
+                    <div style="border-top:1px dashed #000; margin:6px 0;"></div>
+                    <table style="width:100%; font-size:11px; text-align:left;">${htmlItems}</table>
+                    <div style="border-top:1px dashed #000; margin:6px 0;"></div>
+                    <table style="width:100%; font-size:11px; font-weight:bold;">
+                        <tr><td>GRAND TOTAL:</td><td style="text-align:right;">${formatRupiah(trx.total)}</td></tr>
+                        <tr><td style="font-weight:normal;">DIBAYAR:</td><td style="text-align:right; font-weight:normal;">${formatRupiah(trx.cashReceived)}</td></tr>
+                        <tr><td style="font-weight:normal;">KEMBALIAN:</td><td style="text-align:right; font-weight:normal;">${formatRupiah(trx.cashReturn)}</td></tr>
+                    </table>
+                    <div style="border-top:1px dashed #000; margin:10px 0 4px 0;"></div>
+                    <p style="font-size:10px; margin:0; font-weight:bold">Terima Kasih Atas Kunjungan Anda!</p>
+                </div>
+            `;
             window.print();
         }
 
@@ -753,7 +857,7 @@
         function renderSemuaHalaman() {
             updateGlobalMenuListDatalist();
 
-            // 1. Render Log Kasir Penjualan
+            // Render Log Kasir Penjualan
             const salesLogBody = document.getElementById('salesLogTableBody');
             let htmlTrx = "";
             dbTransaksi.forEach(t => {
@@ -762,7 +866,7 @@
             });
             salesLogBody.innerHTML = htmlTrx || `<tr><td colspan="7" class="p-4 text-center text-xs text-slate-400">Belum ada transaksi penjualan harian.</td></tr>`;
 
-            // 2. Render Jurnal Arus Kas & Laporan Laba Rugi
+            // Render Jurnal Arus Kas & Laporan Laba Rugi
             let totalRevenue = 0; let totalHppTerakumulasi = 0; let gabunganArusKas = [];
             dbTransaksi.forEach(t => { 
                 totalRevenue += t.total; totalHppTerakumulasi += (t.totalHpp || 0);
@@ -786,7 +890,7 @@
             });
             ledgerBody.innerHTML = htmlLedger || `<tr><td colspan="7" class="p-4 text-center text-slate-400 text-xs">Arus kas kosong.</td></tr>`;
 
-            // 3. Render Ketersediaan Stok Gudang
+            // Render Ketersediaan Stok Gudang
             const stockBody = document.getElementById('stockTableBody');
             let htmlStok = "";
             dbStok.forEach(s => {
@@ -796,7 +900,7 @@
             });
             stockBody.innerHTML = htmlStok || `<tr><td colspan="7" class="p-4 text-center text-xs text-slate-400">Gudang inventori kosong.</td></tr>`;
 
-            // 4. Render Katalog Harga Menu
+            // Render Katalog Harga Menu
             const priceBody = document.getElementById('priceListTableBody');
             let htmlMenu = "";
             dbMenu.forEach(m => {
@@ -812,9 +916,8 @@
             priceBody.innerHTML = htmlMenu || `<tr><td colspan="6" class="p-4 text-center text-xs text-slate-400">Belum ada produk terdaftar.</td></tr>`;
         }
 
-        // Backup Data Management System
         function eksporSemuaDataKeJSON() {
-            const blob = new Blob([JSON.stringify({ menu: dbMenu, stok: dbStok, transaksi: dbTransaksi, pengeluaran: dbPengeluaran }, null, 2)], { type: "application/json" });
+            const blob = new Blob([JSON.stringify({ menu: dbMenu, stok: dbStok, transaksi: dbTransaksi, pengeluaran: dbPengeluaran, profil: dbProfil }, null, 2)], { type: "application/json" });
             const link = document.createElement("a"); link.href = URL.createObjectURL(blob);
             link.download = `Backup_Database_FoodBizPro_${new Date().toISOString().split('T')[0]}.json`; link.click();
         }
@@ -828,11 +931,17 @@
                     const d = JSON.parse(e.target.result);
                     if (d.menu && d.stok && d.transaksi && d.pengeluaran) {
                         dbMenu = d.menu; dbStok = d.stok; dbTransaksi = d.transaksi; dbPengeluaran = d.pengeluaran;
+                        if(d.profil) dbProfil = d.profil;
+                        
                         localStorage.setItem('fbp_menu', JSON.stringify(dbMenu));
                         localStorage.setItem('fbp_stok', JSON.stringify(dbStok));
                         localStorage.setItem('fbp_transaksi', JSON.stringify(dbTransaksi));
                         localStorage.setItem('fbp_pengeluaran', JSON.stringify(dbPengeluaran));
-                        alert("Database dipulihkan!"); renderSemuaHalaman();
+                        localStorage.setItem('fbp_profil', JSON.stringify(dbProfil));
+                        
+                        alert("Database dipulihkan!"); 
+                        muatProfilKeFormDanHeader();
+                        renderSemuaHalaman();
                     }
                 } catch (err) { alert("File rusak."); }
                 inputEl.value = "";
@@ -870,6 +979,7 @@
                 document.getElementById('liveClock').innerText = "Kasir Aktif: " + new Date().toLocaleTimeString('id-ID') + " WIB";
             }, 1000);
 
+            muatProfilKeFormDanHeader();
             addOrderItemRow();
             renderSemuaHalaman();
         });
