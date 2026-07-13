@@ -39,14 +39,12 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen pb-12">
 
-    <!-- Area Utama Aplikasi (Akan disembunyikan otomatis saat mencetak) -->
     <div class="no-print">
         <header class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white shadow-md sticky top-0 z-50">
             <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div class="flex items-center gap-3">
                     <span class="text-3xl">🏪</span>
                     <div>
-                        <!-- BINDING DENGAN PROFILE TOKO -->
                         <h1 id="headerStoreName" class="text-xl font-bold tracking-wide">FoodBiz Pro V2</h1>
                         <p id="headerStoreTagline" class="text-xs text-indigo-200">Sistem Kasir Terintegrasi, Manajemen Stok & Multi-Metode Pembayaran</p>
                     </div>
@@ -73,7 +71,6 @@
 
         <main class="max-w-7xl mx-auto px-4 mt-8">
             
-            <!-- TAB 1: PENJUALAN -->
             <div id="tab-penjualan" class="tab-content space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
@@ -176,7 +173,6 @@
                 </div>
             </div>
 
-            <!-- TAB 2: LAPORAN -->
             <div id="tab-laporan" class="tab-content hidden space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-emerald-100 flex items-center gap-4">
@@ -286,7 +282,6 @@
                 </div>
             </div>
 
-            <!-- TAB 3: STOK GUDANG -->
             <div id="tab-stok" class="tab-content hidden space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
@@ -357,7 +352,6 @@
                 </div>
             </div>
 
-            <!-- TAB 4: LIST MENU -->
             <div id="tab-harga" class="tab-content hidden space-y-6">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
@@ -431,7 +425,6 @@
                 </div>
             </div>
 
-            <!-- TAB NEW 5: PENGATURAN PROFIL TOKO -->
             <div id="tab-profil" class="tab-content hidden max-w-xl mx-auto">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
                     <div class="border-b pb-3">
@@ -456,7 +449,7 @@
                         <label class="block text-xs font-semibold text-slate-600 mb-1">No. WhatsApp / Kontak Struk</label>
                         <input type="text" id="profStorePhone" placeholder="Contoh: 0812-3456-7890" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-blue-500 text-slate-600">
                     </div>
-                    <button type="button" onclick="simpanProfilToko Baru()" class="w-full bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold py-3 px-4 rounded-xl transition shadow-md">
+                    <button type="button" onclick="simpanProfilTokoBaru()" class="w-full bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold py-3 px-4 rounded-xl transition shadow-md">
                         🔄 Perbarui Nama Toko & Struktur Struk
                     </button>
                 </div>
@@ -465,7 +458,6 @@
         </main>
     </div>
 
-    <!-- AREA STRUK EXCLUSIVE PRINT -->
     <div id="printReceiptArea" class="hidden"></div>
 
     <script>
@@ -502,13 +494,11 @@
             return "Rp " + Math.round(angka).toLocaleString('id-ID');
         }
 
-        // FUNGSI PROFIL BARU
+        // FUNGSI PROFIL
         function muatProfilKeFormDanHeader() {
-            // Pasang di header atas aplikasi
             document.getElementById('headerStoreName').innerText = dbProfil.name;
             document.getElementById('headerStoreTagline').innerText = dbProfil.tagline;
 
-            // Pasang di input form tab pengaturan
             document.getElementById('profStoreName').value = dbProfil.name;
             document.getElementById('profStoreTagline').value = dbProfil.tagline;
             document.getElementById('profStoreAddress').value = dbProfil.address;
@@ -524,10 +514,9 @@
             dbProfil = { name, tagline, address, phone };
             localStorage.setItem('fbp_profil', JSON.stringify(dbProfil));
             
-            // Re-render header & berikan alert sukses
             muatProfilKeFormDanHeader();
             alert("✨ Sukses! Profil toko berhasil diperbarui di sistem dan cetakan nota.");
-            switchTab('tab-penjualan'); // Kembalikan ke halaman kasir utama
+            switchTab('tab-penjualan'); 
         }
 
         function updateGlobalMenuListDatalist() {
@@ -539,7 +528,7 @@
             const selectBahan = document.getElementById('menuResepBahan');
             let htmlBahan = '<option value="">-- Jual Tanpa Potong Stok (Non-Inventory) --</option>';
             dbStok.forEach(s => {
-                htmlBahan += `<option value="${s.name}">${s.name} (${s.unit})</option>';`;
+                htmlBahan += `<option value="${s.name}">${s.name} (${s.unit})</option>`;
             });
             selectBahan.innerHTML = htmlBahan;
         }
@@ -681,7 +670,6 @@
             }, 200);
         }
 
-        // FUNGSI PRINT STRUK DI-UPDATE UNTUK MENGGUNAKAN PROFILE DINAMIS
         function cetakStrukNotaPdf(id) {
             const trx = dbTransaksi.find(t => t.id === id);
             if (!trx) return;
@@ -693,9 +681,8 @@
             
             printArea.innerHTML = `
                 <div style="text-align:center;">
-                    <!-- DINAMIS SESUAI PROFIL PEMILIK -->
-                    <h3 style="margin:0; font-size:16px; font-weight:bold; uppercase">${dbProfil.name}</h3>
-                    <p style="margin:2px 0; font-size:11px; italic">${dbProfil.tagline}</p>
+                    <h3 style="margin:0; font-size:16px; font-weight:bold; text-transform: uppercase;">${dbProfil.name}</h3>
+                    <p style="margin:2px 0; font-size:11px; font-style: italic;">${dbProfil.tagline}</p>
                     <p style="margin:2px 0; font-size:10px; color:#555;">${dbProfil.address}</p>
                     ${dbProfil.phone !== "-" ? `<p style="margin:1px 0; font-size:10px;">Telp/WA: ${dbProfil.phone}</p>` : ''}
                     
@@ -857,7 +844,6 @@
         function renderSemuaHalaman() {
             updateGlobalMenuListDatalist();
 
-            // Render Log Kasir Penjualan
             const salesLogBody = document.getElementById('salesLogTableBody');
             let htmlTrx = "";
             dbTransaksi.forEach(t => {
@@ -866,11 +852,11 @@
             });
             salesLogBody.innerHTML = htmlTrx || `<tr><td colspan="7" class="p-4 text-center text-xs text-slate-400">Belum ada transaksi penjualan harian.</td></tr>`;
 
-            // Render Jurnal Arus Kas & Laporan Laba Rugi
             let totalRevenue = 0; let totalHppTerakumulasi = 0; let gabunganArusKas = [];
             dbTransaksi.forEach(t => { 
                 totalRevenue += t.total; totalHppTerakumulasi += (t.totalHpp || 0);
-                gabunganArusKas.push({ id: t.id, date: t.date, type: "MASUK (OMSET)", category: `Penjualan [${t.paymentMethod}]`, note: `Meja: ${t.customer}`, debit: t.total, credit: 0, isTrx: true }); 
+                gridObj = { id: t.id, date: t.date, type: "MASUK (OMSET)", category: `Penjualan [${t.paymentMethod}]`, note: `Meja: ${t.customer}`, debit: t.total, credit: 0, isTrx: true };
+                gabunganArusKas.push(gridObj); 
             });
             dbPengeluaran.forEach(e => { 
                 totalHppTerakumulasi += e.amount;
@@ -890,7 +876,6 @@
             });
             ledgerBody.innerHTML = htmlLedger || `<tr><td colspan="7" class="p-4 text-center text-slate-400 text-xs">Arus kas kosong.</td></tr>`;
 
-            // Render Ketersediaan Stok Gudang
             const stockBody = document.getElementById('stockTableBody');
             let htmlStok = "";
             dbStok.forEach(s => {
@@ -900,7 +885,6 @@
             });
             stockBody.innerHTML = htmlStok || `<tr><td colspan="7" class="p-4 text-center text-xs text-slate-400">Gudang inventori kosong.</td></tr>`;
 
-            // Render Katalog Harga Menu
             const priceBody = document.getElementById('priceListTableBody');
             let htmlMenu = "";
             dbMenu.forEach(m => {
