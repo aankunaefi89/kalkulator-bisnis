@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FoodBiz Pro V2 - Sistem Kasir Terpadu</title>
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS (Fixed Link) -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- FontAwesome untuk Ikon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -40,7 +40,7 @@
     <!-- Konten Utama Aplikasi (Disembunyikan saat cetak) -->
     <div class="no-print min-h-screen flex flex-col">
         <!-- Header -->
-        <header class="bg-gradient-to-r Kahn from-blue-600 to-indigo-700 text-white shadow-md p-4">
+        <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-md p-4">
             <div class="container mx-auto flex justify-between items-center">
                 <h1 class="text-xl font-bold flex items-center gap-2">
                     <i class="fa-solid fa-utensils"></i> FoodBiz Pro V2
@@ -529,42 +529,6 @@
         function hapusStok(nama) {
             if(confirm(`Hapus bahan ${nama} dari daftar gudang?`)) {
                 delete database.stok[nama];
-                simpanKeLokal();
-                sinkronisasiDatalist();
-            }
-        }
-
-        function tambahMenu() {
-            const nama = document.getElementById('menu-nama').value.trim();
-            const harga = parseInt(document.getElementById('menu-harga').value) || 0;
-            const modal = parseInt(document.getElementById('menu-modal').value) || 0;
-            const bBahan = document.getElementById('menu-resep-bahan').value;
-            const bQty = parseInt(document.getElementById('menu-resep-qty').value) || 0;
-
-            if(!nama || harga <= 0) {
-                alert("Mohon lengkapi Nama Menu dan Harga Jual.");
-                return;
-            }
-
-            database.menu[nama] = {
-                harga: harga,
-                modal: modal,
-                resep: { bahan: bBahan, qty: bQty }
-            };
-
-            document.getElementById('menu-nama').value = '';
-            document.getElementById('menu-harga').value = '';
-            document.getElementById('menu-modal').value = '';
-            document.getElementById('menu-resep-bahan').value = '';
-            document.getElementById('menu-resep-qty').value = '';
-            
-            simpanKeLokal();
-            sinkronisasiDatalist();
-        }
-
-        function hapusMenu(nama) {
-            if(confirm(`Hapus menu ${nama}?`)) {
-                delete database.menu[nama];
                 simpanKeLokal();
                 sinkronisasiDatalist();
             }
